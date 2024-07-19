@@ -1,0 +1,33 @@
+{
+  "name": "my-next-portfolio",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.7.0",
+    "@types/jspdf": "^2.0.0",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "autoprefixer": "^10.4.19",
+    "eslint": "9.x",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-vue": "^9.27.0",
+    "globals": "^15.8.0",
+    "postcss": "^8.4.39",
+    "prettier": "^3.3.3",
+    "tailwind": "^4.0.0",
+    "typescript": "^5.2.2",
+    "typescript-eslint": "^7.16.1",
+    "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "jspdf": "^2.5.1",
+    "vue": "^3.4.31",
+    "vue-pdf-embed": "^2.0.4",
+    "vue-router": "^4.4.0"
+  }
+}
