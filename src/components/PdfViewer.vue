@@ -16,7 +16,7 @@ import { jsPDF } from 'jspdf'
 import { ref, onMounted } from 'vue'
 import VuePdfEmbed from 'vue-pdf-embed'
 import pdfElements from '../utils/pdfElements'
-import type { blockContext } from '../types/pdfUtils.types'
+import type { BlockContext } from '../types/pdfUtils.types'
 
 const pdfViewer = ref<HTMLDivElement>()
 const pdfBase64 = ref<string>()
@@ -31,26 +31,29 @@ onMounted(() => {
     // unit: 'pt'
   })
 
-  const blockContext: blockContext = {
+  const blockContext: BlockContext = {
     numberOfElements: 0,
     cursorYPosition: 0,
     docPadding: 10
-    // maxWidth: 90
   }
 
   // Header
   pdfElements.addText(doc, blockContext, 'Jeancarlo Javier', {
-    fontSize: 30,
-    marginBottom: 3
+    fontSize: 25,
+    marginBottom: 2
   })
 
   pdfElements.addText(doc, blockContext, 'jeancarlojavier43@gmail.com', {
-    fontSize: 15,
-    marginBottom: 10
+    fontSize: 12,
+    marginBottom: 6
+  })
+
+  pdfElements.addLine(doc, blockContext, {
+    marginBottom: 6
   })
 
   pdfElements.addText(doc, blockContext, 'Portfolio', {
-    fontSize: 25,
+    fontSize: 20,
     marginBottom: 5
   })
 
@@ -59,9 +62,20 @@ onMounted(() => {
     blockContext,
     'Lorem ipsum dolor sit amet consectetur adipiscing elit penatibus feugiat cubilia etiam, semper purus lectus lacinia suscipit facilisi commodo praesent sodales torquent nec, vehicula mauris ante class magnis lobortis fusce a risus platea. Netus lacus felis porttitor facilisis curabitur, phasellus nisi fringilla eleifend cum, justo convallis inceptos tristique.',
     {
-      fontSize: 16
+      fontSize: 12
     }
   )
+
+  const blockContext2: BlockContext = {
+    numberOfElements: 0,
+    cursorYPosition: blockContext.cursorYPosition,
+    docPadding: 10
+  }
+
+  pdfElements.addText(doc, blockContext2, 'Experiencia', {
+    fontSize: 20,
+    marginBottom: 2
+  })
 
   const blob = doc.output('blob')
 

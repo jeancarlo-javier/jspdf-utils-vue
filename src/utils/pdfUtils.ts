@@ -1,5 +1,5 @@
 import type { jsPDF } from 'jspdf'
-import type { addTextOptions, textOptions, blockContext } from '../types/pdfUtils.types'
+import type { AddTextOptions, BaseElementOptions, BlockContext } from '../types/pdfUtils.types'
 
 // Doc Utils
 export function getDocWidth(doc: jsPDF) {
@@ -12,28 +12,40 @@ export function getDocHeight(doc: jsPDF) {
 
 // Cursor Utils
 export function calcCursorYPosition(
-  doc: jsPDF,
-  blockContext: blockContext,
-  text: string,
-  addTextOptions: addTextOptions,
-  options: textOptions
+  blockContext: BlockContext,
+  options?: BaseElementOptions
 ): number {
   let cursorYPosition: number = blockContext.cursorYPosition
 
-  cursorYPosition += getTextHeight(doc, text, options.maxWidth || 0, addTextOptions)
-  cursorYPosition += addTextOptions.marginBottom || 0
-
   if (blockContext.numberOfElements === 0) cursorYPosition += blockContext.docPadding
+
+  if (options) {
+    cursorYPosition += options.marginBottom || 0
+  }
+
+  return cursorYPosition
+}
+
+export function calcCursorYPositionText(
+  doc: jsPDF,
+  blockContext: BlockContext,
+  options: AddTextOptions,
+  maxWidth: number,
+  text: string
+): number {
+  let cursorYPosition: number = calcCursorYPosition(blockContext, options)
+
+  cursorYPosition += getTextHeight(doc, text, maxWidth || 0, options)
 
   return cursorYPosition
 }
 
 // Text Utils
-export function getTextWidth(doc: jsPDF, text: string, addTextOptions: addTextOptions) {
-  const maxWidth = addTextOptions.maxWidth
+export function getTextWidth(doc: jsPDF, text: string, options: AddTextOptions) {
+  const maxWidth = options.maxWidth
 
   const textWidth =
-    (doc.getStringUnitWidth(text) * addTextOptions.fontSize) / doc.internal.scaleFactor
+    (doc.getStringUnitWidth(text) * options.fontSize) / doc.internal.scaleFactor
 
   if (maxWidth && textWidth > maxWidth) {
     return maxWidth
@@ -46,11 +58,11 @@ export function getTextHeight(
   doc: jsPDF,
   text: string,
   maxWidth: number,
-  addTextOptions: addTextOptions
+  options: AddTextOptions
   // maxHeight?: number
 ): number {
-  const fontSize = addTextOptions.fontSize || 16
-  const fontFamily = addTextOptions.fontFamily || 'helvetica'
+  const fontSize = options.fontSize || 16
+  const fontFamily = options.fontFamily || 'helvetica'
 
   // Set the font and size in the jsPDF document
   doc.setFont(fontFamily)
@@ -77,10 +89,10 @@ export function getTextHeight(
 export function centerTextHorizontal(
   doc: jsPDF,
   text: string,
-  addTextOptions: addTextOptions
+  options: AddTextOptions
 ): number {
   const docWidth = getDocWidth(doc)
-  const textWidth = getTextWidth(doc, text, addTextOptions)
+  const textWidth = getTextWidth(doc, text, options)
   return docWidth / 2 - textWidth / 2
 }
 

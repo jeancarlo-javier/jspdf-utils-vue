@@ -1,33 +1,39 @@
 import {
   getMaxTextWidth,
   calcCursorYPosition,
+  calcCursorYPositionText,
   getDocWidth,
   centerTextHorizontal
 } from './pdfUtils'
-import type { addTextOptions, textOptions, blockContext } from '../types/pdfUtils.types'
+import type {
+  AddTextOptions,
+  AddLineOptions,
+  BaseTextOptions,
+  BlockContext
+} from '../types/pdfUtils.types'
 import type { jsPDF } from 'jspdf'
 
 export function addText(
   doc: jsPDF,
-  blockContext: blockContext,
+  blockContext: BlockContext,
   text: string,
-  addTextOptions: addTextOptions
+  options: AddTextOptions
 ): void {
-  doc.setFontSize(addTextOptions.fontSize)
+  doc.setFontSize(options.fontSize)
 
-  const options: textOptions = {}
+  const textOptions: BaseTextOptions = {}
 
-  options.maxWidth = getMaxTextWidth(
-    addTextOptions.maxWidth || 0,
+  textOptions.maxWidth = getMaxTextWidth(
+    options.maxWidth || 0,
     getDocWidth(doc),
     blockContext.maxWidth || 0,
     blockContext.docPadding
   )
 
-  let textX = addTextOptions.x || 0
-  let textY = addTextOptions.y || 0
+  let textX = options.x || 0
+  let textY = options.y || 0
 
-  if (addTextOptions.textCenter) textX = centerTextHorizontal(doc, text, addTextOptions)
+  if (options.textCenter) textX = centerTextHorizontal(doc, text, options)
 
   if (blockContext.docPadding) {
     textX += blockContext.docPadding
@@ -35,29 +41,43 @@ export function addText(
     if (blockContext.numberOfElements === 0) textY += blockContext.docPadding
   }
 
-  if (addTextOptions.topOffset) textY += addTextOptions.topOffset
-  if (addTextOptions.leftOffset) textX += addTextOptions.leftOffset
-  if (addTextOptions.rightOffset) textX -= addTextOptions.rightOffset
-  if (addTextOptions.bottomOffset) textY -= addTextOptions.bottomOffset
+  if (options.topOffset) textY += options.topOffset
+  if (options.leftOffset) textX += options.leftOffset
+  if (options.rightOffset) textX -= options.rightOffset
+  if (options.bottomOffset) textY -= options.bottomOffset
 
   if (blockContext.cursorYPosition) textY += blockContext.cursorYPosition
 
   doc.text(text, textX, textY || 0, {
     baseline: 'top',
-    ...options
+    ...textOptions
   })
 
-  blockContext.cursorYPosition = calcCursorYPosition(
+  blockContext.cursorYPosition = calcCursorYPositionText(
     doc,
     blockContext,
-    text,
-    addTextOptions,
-    options
+    options,
+    textOptions.maxWidth,
+    text
   )
 
   blockContext.numberOfElements++
 }
 
+export function addLine(
+  doc: jsPDF,
+  blockContext: BlockContext,
+  options: AddLineOptions
+  // addTextOptions: addTextOptions
+): void {
+  doc.line(0, blockContext.cursorYPosition, getDocWidth(doc), blockContext.cursorYPosition)
+
+  blockContext.cursorYPosition = calcCursorYPosition(blockContext, {
+    marginBottom: options.marginBottom
+  })
+}
+
 export default {
-  addText
+  addText,
+  addLine
 }

@@ -1,11 +1,22 @@
-export interface textOptions {
+export interface BlockContext {
+  numberOfElements: number
+  cursorYPosition: number
+  docPadding: number
   maxWidth?: number
 }
 
-export interface addTextOptions extends textOptions {
-  // Position - Sets the default x and y position of the text
+export interface BaseElementOptions {
+  // Margin - Sets the margin around the text
+  marginBottom?: number
+}
+
+export interface BaseTextOptions extends BaseElementOptions {
+  maxWidth?: number
   x?: number
   y?: number
+}
+
+export interface AddTextOptions extends BaseTextOptions {
   // Font
   fontSize: number
   fontFamily?: string
@@ -16,13 +27,8 @@ export interface addTextOptions extends textOptions {
   leftOffset?: number
   rightOffset?: number
   bottomOffset?: number
-  // Margin - Sets the margin around the text
-  marginBottom?: number
 }
 
-export interface blockContext {
-  numberOfElements: number
-  cursorYPosition: number
-  docPadding: number
-  maxWidth?: number
-}
+export interface BaseLineOptions extends BaseElementOptions {}
+
+export interface AddLineOptions extends BaseLineOptions {}
