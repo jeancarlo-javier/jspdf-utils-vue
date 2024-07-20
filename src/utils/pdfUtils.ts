@@ -17,7 +17,7 @@ export function calcCursorYPosition(
 ): number {
   let cursorYPosition: number = blockContext.cursorYPosition
 
-  if (blockContext.numberOfElements === 0) cursorYPosition += blockContext.docPadding
+  if (blockContext.numberOfElements === 0) cursorYPosition += blockContext.paddingVertical
 
   if (options) {
     cursorYPosition += options.marginBottom || 0
@@ -99,14 +99,16 @@ export function centerTextHorizontal(
 export function getMaxTextWidth(
   textMaxWidth: number,
   docMaxWidth: number,
-  blockMaxWidth: number,
-  docPadding: number
+  blockContext: BlockContext
 ): number {
-  let maxWidth = textMaxWidth || blockMaxWidth || docMaxWidth
+  const bloackMaxWidth = blockContext.maxWidth || 0
+  let maxWidth = textMaxWidth || bloackMaxWidth || docMaxWidth
 
-  if (docMaxWidth === maxWidth) {
-    maxWidth -= docPadding * 2
-  }
+  // if (docMaxWidth === maxWidth) {
+  //   maxWidth -= blockContext.paddingHorizontal * 2
+  // }
+
+  if (blockContext.paddingHorizontal) maxWidth -= blockContext.paddingHorizontal * 2
 
   return maxWidth
 }

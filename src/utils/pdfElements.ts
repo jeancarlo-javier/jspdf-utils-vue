@@ -23,22 +23,17 @@ export function addText(
 
   const textOptions: BaseTextOptions = {}
 
-  textOptions.maxWidth = getMaxTextWidth(
-    options.maxWidth || 0,
-    getDocWidth(doc),
-    blockContext.maxWidth || 0,
-    blockContext.docPadding
-  )
+  textOptions.maxWidth = getMaxTextWidth(options.maxWidth || 0, getDocWidth(doc), blockContext)
 
   let textX = options.x || 0
   let textY = options.y || 0
 
   if (options.textCenter) textX = centerTextHorizontal(doc, text, options)
 
-  if (blockContext.docPadding) {
-    textX += blockContext.docPadding
+  if (blockContext.paddingHorizontal) {
+    textX += blockContext.paddingHorizontal
 
-    if (blockContext.numberOfElements === 0) textY += blockContext.docPadding
+    if (blockContext.numberOfElements === 0) textY += blockContext.paddingVertical
   }
 
   if (options.topOffset) textY += options.topOffset

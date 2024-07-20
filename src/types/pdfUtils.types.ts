@@ -1,8 +1,31 @@
-export interface BlockContext {
+export interface BlockContextBase {
   numberOfElements: number
   cursorYPosition: number
-  docPadding: number
   maxWidth?: number
+  paddingHorizontal: number
+  paddingVertical: number
+}
+
+export class BlockContext implements BlockContextBase {
+  numberOfElements: number
+  cursorYPosition: number
+  maxWidth?: number
+  paddingHorizontal: number
+  paddingVertical: number
+
+  constructor({
+    numberOfElements = 0,
+    cursorYPosition = 0,
+    maxWidth,
+    paddingHorizontal = 10,
+    paddingVertical = 10
+  }: Partial<BlockContextBase> = {}) {
+    this.numberOfElements = numberOfElements
+    this.cursorYPosition = cursorYPosition
+    this.maxWidth = maxWidth
+    this.paddingHorizontal = paddingHorizontal
+    this.paddingVertical = paddingVertical
+  }
 }
 
 export interface BaseElementOptions {
