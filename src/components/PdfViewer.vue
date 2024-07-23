@@ -30,107 +30,52 @@ onMounted(() => {
     // unit: 'pt'
   })
 
-  const blockContext = new BlockContext({ paddingHorizontal: 10, paddingVertical: 10 })
+  const blockContext1 = new BlockContext({
+    // paddingHorizontal: 10,
+    // paddingVertical: 10,
+    maxWidth: 100
+    // y: 30
+  })
 
-  // Header
-  pdfElements.addText(doc, blockContext, 'Jeancarlo Javier', {
+  pdfElements.addText(doc, blockContext1, 'Jeancarlo Javier', {
     fontSize: 25,
     marginBottom: 2
+    // x: 10,
+    // textCenter: true
   })
-
-  pdfElements.addText(doc, blockContext, 'jeancarlojavier43@gmail.com', {
-    fontSize: 12,
-    marginBottom: 6
-  })
-
-  pdfElements.addLine(doc, blockContext, {
-    marginBottom: 6
-  })
-
-  pdfElements.addText(doc, blockContext, 'Portfolio', {
-    fontSize: 20,
-    marginBottom: 5
-  })
-
-  pdfElements.addText(
-    doc,
-    blockContext,
-    'Lorem ipsum dolor sit amet consectetur adipiscing elit penatibus feugiat cubilia etiam, semper purus lectus lacinia suscipit facilisi commodo praesent sodales torquent nec, vehicula mauris ante class magnis lobortis fusce a risus platea. Netus lacus felis porttitor facilisis curabitur, phasellus nisi fringilla eleifend cum, justo convallis inceptos tristique.',
-    {
-      fontSize: 12,
-      marginBottom: 8
-    }
-  )
-
-  // const blockContext2: BlockContext = {
-  //   numberOfElements: 0,
-  //   cursorYPosition: blockContext.cursorYPosition,
-  //   paddingHorizontal: 10,
-  //   paddingVertical: 0
-  // }
 
   const blockContext2 = new BlockContext({
-    cursorYPosition: blockContext.cursorYPosition,
-    paddingHorizontal: 10,
-    paddingVertical: 0
+    x: 100,
+    maxWidth: 100
   })
 
-  pdfElements.addText(doc, blockContext2, 'Experiencia', {
-    fontSize: 20,
-    marginBottom: 5
+  pdfElements.addText(doc, blockContext2, 'Jeancarlo Javier', {
+    fontSize: 25
   })
 
   pdfElements.addText(
     doc,
     blockContext2,
-    'Lorem ipsum dolor sit amet consectetur adipiscing elit penatibus feugiat cubilia etiam, semper purus lectus lacinia suscipit facilisi commodo praesent sodales torquent nec, vehicula mauris ante class magnis lobortis fusce a risus platea. Netus lacus felis porttitor facilisis curabitur, phasellus nisi fringilla eleifend cum, justo convallis inceptos tristique.',
+    'Lorem ipsum dolor sit amet consectetur adipiscing elit condimentum.',
     {
-      fontSize: 12,
-      marginBottom: 6
+      fontSize: 15
     }
   )
 
   const blockContext3 = new BlockContext({
-    cursorYPosition: blockContext2.cursorYPosition,
-    paddingHorizontal: 10,
-    paddingVertical: 0,
-    maxWidth: 100
+    x: 100,
+    y: 100,
+    maxWidth: 100,
+    cursorYPosition:
+      blockContext1.cursorYPosition > blockContext2.cursorYPosition
+        ? blockContext1.cursorYPosition
+        : blockContext2.cursorYPosition
   })
 
-  pdfElements.addText(doc, blockContext3, 'Educación', {
-    fontSize: 20,
-    marginBottom: 5
+  pdfElements.addLine(doc, blockContext3, {
+    y: 100
+    // marginBottom: 2
   })
-
-  const blockContext4 = new BlockContext({
-    cursorYPosition: blockContext2.cursorYPosition,
-    paddingHorizontal: 10,
-    paddingVertical: 0,
-    maxWidth: 100
-  })
-
-  pdfElements.addText(doc, blockContext4, 'Soft Skills', {
-    fontSize: 20,
-    marginBottom: 5,
-    x: 100
-  })
-
-  pdfElements.addText(doc, blockContext4, 'Soft Skills', {
-    fontSize: 20,
-    marginBottom: 5,
-    x: 100
-  })
-
-  pdfElements.addText(
-    doc,
-    blockContext4,
-    'Lorem ipsum dolor sit amet consectetur adipiscing elit penatibus feugiat cubilia etiam, semper purus lectus lacinia suscipit facilisi commodo praesent sodales torquent nec, vehicula mauris ante class magnis lobortis fusce a risus platea. Netus lacus felis porttitor facilisis curabitur, phasellus nisi fringilla eleifend cum, justo convallis inceptos tristique.',
-    {
-      fontSize: 12,
-      marginBottom: 6,
-      x: 100
-    }
-  )
 
   const blob = doc.output('blob')
 

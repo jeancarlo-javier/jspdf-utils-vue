@@ -3,12 +3,14 @@ import {
   calcCursorYPosition,
   calcCursorYPositionText,
   getDocWidth,
-  centerTextHorizontal
+  centerTextHorizontal,
+  calcXPosition,
+  calcYPosition
 } from './pdfUtils'
 import type {
-  AddTextOptions,
-  AddLineOptions,
   BaseTextOptions,
+  AddLineOptions,
+  BaseElementOptions,
   BlockContext
 } from '../types/pdfUtils.types'
 import type { jsPDF } from 'jspdf'
@@ -17,42 +19,39 @@ export function addText(
   doc: jsPDF,
   blockContext: BlockContext,
   text: string,
-  options: AddTextOptions
+  options: BaseTextOptions
 ): void {
   doc.setFontSize(options.fontSize)
 
-  const textOptions: BaseTextOptions = {}
-
-  textOptions.maxWidth = getMaxTextWidth(options.maxWidth || 0, getDocWidth(doc), blockContext)
-
-  let textX = options.x || 0
-  let textY = options.y || 0
-
-  if (options.textCenter) textX = centerTextHorizontal(doc, text, options)
-
-  if (blockContext.paddingHorizontal) {
-    textX += blockContext.paddingHorizontal
-
-    if (blockContext.numberOfElements === 0) textY += blockContext.paddingVertical
+  const elementOptions: BaseElementOptions = {
+    maxWidth: getMaxTextWidth(options.maxWidth || 0, getDocWidth(doc), blockContext)
   }
 
-  if (options.topOffset) textY += options.topOffset
-  if (options.leftOffset) textX += options.leftOffset
-  if (options.rightOffset) textX -= options.rightOffset
-  if (options.bottomOffset) textY -= options.bottomOffset
+  let { x = 0, y = 0 } = options
+  const { textCenter } = options
 
-  if (blockContext.cursorYPosition) textY += blockContext.cursorYPosition
+  if (textCenter) x = centerTextHorizontal(doc, text, options)
 
-  doc.text(text, textX, textY || 0, {
+  x = calcXPosition(x, blockContext, {
+    leftOffset: options.leftOffset,
+    rightOffset: options.rightOffset
+  })
+
+  y = calcYPosition(y, blockContext, {
+    topOffset: options.topOffset,
+    bottomOffset: options.bottomOffset
+  })
+
+  doc.text(text, x, y, {
     baseline: 'top',
-    ...textOptions
+    maxWidth: elementOptions.maxWidth
   })
 
   blockContext.cursorYPosition = calcCursorYPositionText(
     doc,
     blockContext,
     options,
-    textOptions.maxWidth,
+    elementOptions.maxWidth || 0,
     text
   )
 

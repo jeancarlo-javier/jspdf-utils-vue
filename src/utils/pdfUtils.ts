@@ -1,5 +1,11 @@
 import type { jsPDF } from 'jspdf'
-import type { AddTextOptions, BaseElementOptions, BlockContext } from '../types/pdfUtils.types'
+import type {
+  BaseTextOptions,
+  BaseElementOptions,
+  BlockContext,
+  XOffsetOptions,
+  YOffsetOptions
+} from '../types/pdfUtils.types'
 
 // Doc Utils
 export function getDocWidth(doc: jsPDF) {
@@ -29,7 +35,7 @@ export function calcCursorYPosition(
 export function calcCursorYPositionText(
   doc: jsPDF,
   blockContext: BlockContext,
-  options: AddTextOptions,
+  options: BaseTextOptions,
   maxWidth: number,
   text: string
 ): number {
@@ -41,7 +47,7 @@ export function calcCursorYPositionText(
 }
 
 // Text Utils
-export function getTextWidth(doc: jsPDF, text: string, options: AddTextOptions) {
+export function getTextWidth(doc: jsPDF, text: string, options: BaseTextOptions) {
   const maxWidth = options.maxWidth
 
   const textWidth =
@@ -58,7 +64,7 @@ export function getTextHeight(
   doc: jsPDF,
   text: string,
   maxWidth: number,
-  options: AddTextOptions
+  options: BaseTextOptions
   // maxHeight?: number
 ): number {
   const fontSize = options.fontSize || 16
@@ -89,10 +95,12 @@ export function getTextHeight(
 export function centerTextHorizontal(
   doc: jsPDF,
   text: string,
-  options: AddTextOptions
+  options: BaseTextOptions
 ): number {
+  // TODO: Improve this function
   const docWidth = getDocWidth(doc)
   const textWidth = getTextWidth(doc, text, options)
+
   return docWidth / 2 - textWidth / 2
 }
 
@@ -111,4 +119,34 @@ export function getMaxTextWidth(
   if (blockContext.paddingHorizontal) maxWidth -= blockContext.paddingHorizontal * 2
 
   return maxWidth
+}
+
+export function calcXPosition(x: number, blockContext: BlockContext, options: XOffsetOptions) {
+  const { leftOffset, rightOffset } = options
+
+  if (blockContext.x) x += blockContext.x
+
+  if (blockContext.paddingHorizontal) x += blockContext.paddingHorizontal
+
+  if (leftOffset) x += leftOffset
+  if (rightOffset) x -= rightOffset
+
+  return x
+}
+
+export function calcYPosition(y: number, blockContext: BlockContext, options: YOffsetOptions) {
+  const { topOffset, bottomOffset } = options
+
+  if (blockContext.y) y += blockContext.y
+
+  if (blockContext.paddingVertical) {
+    if (blockContext.numberOfElements === 0) y += blockContext.paddingVertical
+  }
+
+  if (topOffset) y += topOffset
+  if (bottomOffset) y -= bottomOffset
+
+  y += blockContext.cursorYPosition || 0
+
+  return y
 }

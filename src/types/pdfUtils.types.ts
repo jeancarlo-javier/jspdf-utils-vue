@@ -1,4 +1,6 @@
 export interface BlockContextBase {
+  x?: number
+  y?: number
   numberOfElements: number
   cursorYPosition: number
   maxWidth?: number
@@ -12,46 +14,55 @@ export class BlockContext implements BlockContextBase {
   maxWidth?: number
   paddingHorizontal: number
   paddingVertical: number
+  x?: number
+  y?: number
 
   constructor({
     numberOfElements = 0,
     cursorYPosition = 0,
     maxWidth,
-    paddingHorizontal = 10,
-    paddingVertical = 10
+    paddingHorizontal = 0,
+    paddingVertical = 0,
+    x = 0,
+    y = 0
   }: Partial<BlockContextBase> = {}) {
     this.numberOfElements = numberOfElements
     this.cursorYPosition = cursorYPosition
     this.maxWidth = maxWidth
     this.paddingHorizontal = paddingHorizontal
     this.paddingVertical = paddingVertical
+    this.x = x
+    this.y = y
   }
 }
 
-export interface BaseElementOptions {
-  // Margin - Sets the margin around the text
-  marginBottom?: number
-}
-
-export interface BaseTextOptions extends BaseElementOptions {
-  maxWidth?: number
-  x?: number
-  y?: number
-}
-
-export interface AddTextOptions extends BaseTextOptions {
-  // Font
-  fontSize: number
-  fontFamily?: string
-  // Text - Centers the text horizontally
-  textCenter?: boolean
-  // Offset - Moves the text position up, down, left or right
-  topOffset?: number
+// Offsets
+export interface XOffsetOptions {
   leftOffset?: number
   rightOffset?: number
+}
+
+export interface YOffsetOptions {
+  topOffset?: number
   bottomOffset?: number
 }
 
-export interface BaseLineOptions extends BaseElementOptions {}
+export interface Offsets extends XOffsetOptions, YOffsetOptions {}
 
-export interface AddLineOptions extends BaseLineOptions {}
+// Base Element Options
+export interface BaseElementOptions extends Offsets {
+  x?: number
+  y?: number
+  maxWidth?: number
+  marginBottom?: number // Margin - Sets the margin around the element
+  // Offsets - Moves the element position up, down, left or right
+}
+
+// Custom Text Options
+export interface BaseTextOptions extends BaseElementOptions {
+  fontSize: number
+  fontFamily?: string
+  textCenter?: boolean // Centers the text horizontally
+}
+
+export interface AddLineOptions extends BaseElementOptions {}
