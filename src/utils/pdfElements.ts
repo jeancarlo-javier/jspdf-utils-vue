@@ -19,9 +19,15 @@ export function addText(
   doc: jsPDF,
   blockContext: BlockContext,
   text: string,
-  options: BaseTextOptions
+  options: BaseTextOptions = {}
 ): void {
-  doc.setFontSize(options.fontSize)
+  doc.setFontSize(options.fontSize || 16)
+
+  if (blockContext.numberOfElements > 0) {
+    blockContext.updateCursorYPosition(
+      blockContext.cursorYPosition - blockContext.paddingVertical
+    )
+  }
 
   const elementOptions: BaseElementOptions = {
     maxWidth: getMaxTextWidth(options.maxWidth || 0, getDocWidth(doc), blockContext)
@@ -32,43 +38,64 @@ export function addText(
 
   if (textCenter) x = centerTextHorizontal(doc, text, options)
 
-  x = calcXPosition(x, blockContext, {
-    leftOffset: options.leftOffset,
-    rightOffset: options.rightOffset
-  })
+  // getTextWidth(doc, text, options)
+  x = calcXPosition(doc, blockContext, x, text, options)
 
   y = calcYPosition(y, blockContext, {
     topOffset: options.topOffset,
     bottomOffset: options.bottomOffset
   })
 
-  doc.text(text, x, y, {
-    baseline: 'top',
-    maxWidth: elementOptions.maxWidth
-  })
-
-  blockContext.cursorYPosition = calcCursorYPositionText(
-    doc,
-    blockContext,
-    options,
-    elementOptions.maxWidth || 0,
-    text
+  doc.text(
+    text,
+    x,
+    y,
+    {
+      baseline: 'top',
+      maxWidth: elementOptions.maxWidth,
+      align: options.textAlign
+    }
+    // 'center'
   )
 
-  blockContext.numberOfElements++
+  blockContext.updateCursorYPosition(
+    calcCursorYPositionText(doc, blockContext, options, elementOptions.maxWidth || 0, text)
+  )
+
+  blockContext.addElement()
 }
 
 export function addLine(
   doc: jsPDF,
   blockContext: BlockContext,
-  options: AddLineOptions
-  // addTextOptions: addTextOptions
+  options: AddLineOptions = {}
 ): void {
-  doc.line(0, blockContext.cursorYPosition, getDocWidth(doc), blockContext.cursorYPosition)
+  if (blockContext.numberOfElements > 0) {
+    blockContext.updateCursorYPosition(
+      blockContext.cursorYPosition - blockContext.paddingVertical
+    )
+  }
 
-  blockContext.cursorYPosition = calcCursorYPosition(blockContext, {
+  let { y = 0 } = options
+
+  y = calcYPosition(y, blockContext, {
+    topOffset: options.topOffset,
+    bottomOffset: options.bottomOffset,
+    marginTop: options.marginTop,
     marginBottom: options.marginBottom
   })
+  // console.log(options.topOffset, options.bottomOffset)
+
+  doc.line(0, y, getDocWidth(doc), y)
+
+  blockContext.updateCursorYPosition(
+    calcCursorYPosition(blockContext, {
+      marginBottom: options.marginBottom,
+      marginTop: options.marginTop
+    })
+  )
+
+  blockContext.addElement()
 }
 
 export default {

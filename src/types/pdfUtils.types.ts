@@ -1,4 +1,5 @@
 export interface BlockContextBase {
+  id: string
   x?: number
   y?: number
   numberOfElements: number
@@ -9,6 +10,7 @@ export interface BlockContextBase {
 }
 
 export class BlockContext implements BlockContextBase {
+  id: string
   numberOfElements: number
   cursorYPosition: number
   maxWidth?: number
@@ -18,6 +20,7 @@ export class BlockContext implements BlockContextBase {
   y?: number
 
   constructor({
+    id = '',
     numberOfElements = 0,
     cursorYPosition = 0,
     maxWidth,
@@ -26,6 +29,7 @@ export class BlockContext implements BlockContextBase {
     x = 0,
     y = 0
   }: Partial<BlockContextBase> = {}) {
+    this.id = id
     this.numberOfElements = numberOfElements
     this.cursorYPosition = cursorYPosition
     this.maxWidth = maxWidth
@@ -33,6 +37,14 @@ export class BlockContext implements BlockContextBase {
     this.paddingVertical = paddingVertical
     this.x = x
     this.y = y
+  }
+
+  updateCursorYPosition(newY: number): void {
+    this.cursorYPosition = newY
+  }
+
+  addElement(): void {
+    this.numberOfElements++
   }
 }
 
@@ -49,20 +61,27 @@ export interface YOffsetOptions {
 
 export interface Offsets extends XOffsetOptions, YOffsetOptions {}
 
+export interface MarginOptions extends Offsets {
+  marginTop?: number
+  marginBottom?: number
+  marginLeft?: number
+  marginRight?: number
+}
+
 // Base Element Options
-export interface BaseElementOptions extends Offsets {
+export interface BaseElementOptions extends Offsets, MarginOptions {
   x?: number
   y?: number
   maxWidth?: number
-  marginBottom?: number // Margin - Sets the margin around the element
   // Offsets - Moves the element position up, down, left or right
 }
 
 // Custom Text Options
 export interface BaseTextOptions extends BaseElementOptions {
-  fontSize: number
+  fontSize?: number
   fontFamily?: string
-  textCenter?: boolean // Centers the text horizontally
+  textCenter?: boolean
+  textAlign?: 'left' | 'center' | 'right' | 'justify'
 }
 
 export interface AddLineOptions extends BaseElementOptions {}

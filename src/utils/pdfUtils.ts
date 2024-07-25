@@ -3,8 +3,8 @@ import type {
   BaseTextOptions,
   BaseElementOptions,
   BlockContext,
-  XOffsetOptions,
-  YOffsetOptions
+  YOffsetOptions,
+  MarginOptions
 } from '../types/pdfUtils.types'
 
 // Doc Utils
@@ -27,7 +27,10 @@ export function calcCursorYPosition(
 
   if (options) {
     cursorYPosition += options.marginBottom || 0
+    cursorYPosition += options.marginTop || 0
   }
+
+  cursorYPosition += blockContext.paddingVertical
 
   return cursorYPosition
 }
@@ -50,8 +53,9 @@ export function calcCursorYPositionText(
 export function getTextWidth(doc: jsPDF, text: string, options: BaseTextOptions) {
   const maxWidth = options.maxWidth
 
-  const textWidth =
-    (doc.getStringUnitWidth(text) * options.fontSize) / doc.internal.scaleFactor
+  const fontSize = options.fontSize || 16
+
+  const textWidth = (doc.getStringUnitWidth(text) * fontSize) / doc.internal.scaleFactor
 
   if (maxWidth && textWidth > maxWidth) {
     return maxWidth
@@ -121,7 +125,13 @@ export function getMaxTextWidth(
   return maxWidth
 }
 
-export function calcXPosition(x: number, blockContext: BlockContext, options: XOffsetOptions) {
+export function calcXPosition(
+  doc: jsPDF,
+  blockContext: BlockContext,
+  x: number,
+  text: string,
+  options: BaseTextOptions & BaseTextOptions
+) {
   const { leftOffset, rightOffset } = options
 
   if (blockContext.x) x += blockContext.x
@@ -131,20 +141,40 @@ export function calcXPosition(x: number, blockContext: BlockContext, options: XO
   if (leftOffset) x += leftOffset
   if (rightOffset) x -= rightOffset
 
+  const textWidth = getTextWidth(doc, text, options)
+
+  switch (options.textAlign) {
+    case 'center':
+      x += textWidth / 2
+      break
+    case 'right':
+      x += textWidth
+      break
+    default:
+      break
+  }
+
   return x
 }
 
-export function calcYPosition(y: number, blockContext: BlockContext, options: YOffsetOptions) {
+export function calcYPosition(
+  y: number,
+  blockContext: BlockContext,
+  options: YOffsetOptions & MarginOptions
+) {
   const { topOffset, bottomOffset } = options
+  const { marginTop } = options
 
   if (blockContext.y) y += blockContext.y
 
-  if (blockContext.paddingVertical) {
+  if (blockContext.paddingVertical && blockContext.numberOfElements === 0) {
     if (blockContext.numberOfElements === 0) y += blockContext.paddingVertical
   }
 
   if (topOffset) y += topOffset
   if (bottomOffset) y -= bottomOffset
+
+  if (marginTop) y += marginTop
 
   y += blockContext.cursorYPosition || 0
 

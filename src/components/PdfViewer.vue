@@ -30,51 +30,44 @@ onMounted(() => {
     // unit: 'pt'
   })
 
+  // const docContext = {}
+
   const blockContext1 = new BlockContext({
-    // paddingHorizontal: 10,
-    // paddingVertical: 10,
-    maxWidth: 100
-    // y: 30
+    id: 'header',
+    // maxWidth: 200,
+    paddingVertical: 10
   })
 
-  pdfElements.addText(doc, blockContext1, 'Jeancarlo Javier', {
+  pdfElements.addLine(doc, blockContext1, {
+    marginBottom: 5
+  })
+  pdfElements.addText(doc, blockContext1, 'Jeancarlo Javier Quintana Centeno', {
     fontSize: 25,
-    marginBottom: 2
-    // x: 10,
-    // textCenter: true
+    textCenter: true,
+    textAlign: 'center'
+  })
+  pdfElements.addLine(doc, blockContext1, {
+    marginTop: 5
   })
 
   const blockContext2 = new BlockContext({
-    x: 100,
-    maxWidth: 100
+    cursorYPosition: blockContext1.cursorYPosition
+    // paddingHorizontal: 10
   })
-
-  pdfElements.addText(doc, blockContext2, 'Jeancarlo Javier', {
-    fontSize: 25
-  })
-
   pdfElements.addText(
     doc,
     blockContext2,
-    'Lorem ipsum dolor sit amet consectetur adipiscing elit condimentum.',
+    '44 Morningside Road. Edinburgh, Scotland EM10 4BF | IM: 07956 654323 1example-email@example.com',
     {
-      fontSize: 15
+      fontSize: 10,
+      textCenter: true,
+      maxWidth: 200,
+      textAlign: 'center'
     }
   )
 
-  const blockContext3 = new BlockContext({
-    x: 100,
-    y: 100,
-    maxWidth: 100,
-    cursorYPosition:
-      blockContext1.cursorYPosition > blockContext2.cursorYPosition
-        ? blockContext1.cursorYPosition
-        : blockContext2.cursorYPosition
-  })
-
-  pdfElements.addLine(doc, blockContext3, {
-    y: 100
-    // marginBottom: 2
+  pdfElements.addLine(doc, blockContext2, {
+    marginTop: 8
   })
 
   const blob = doc.output('blob')
