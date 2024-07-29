@@ -22,13 +22,6 @@ export function addText(
   text: string,
   options: BaseTextOptions = {}
 ): void {
-  // console.log(options.fontFamily || 'Helvetica')
-
-  console.log({
-    fontFamily: options.fontFamily || 'Helvetica',
-    fontWeight: options.fontWeight
-  })
-
   doc.setFont(
     options.fontFamily || 'Helvetica',
     options.fontStyle || 'normal',
