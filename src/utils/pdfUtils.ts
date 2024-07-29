@@ -2,9 +2,7 @@ import type { jsPDF } from 'jspdf'
 import type {
   BaseTextOptions,
   BaseElementOptions,
-  BlockContext,
-  YOffsetOptions,
-  MarginOptions
+  BlockContext
 } from '../types/pdfUtils.types'
 
 // Doc Utils
@@ -14,6 +12,11 @@ export function getDocWidth(doc: jsPDF) {
 
 export function getDocHeight(doc: jsPDF) {
   return doc.internal.pageSize.getHeight()
+}
+
+export function resetDocConfig(doc: jsPDF) {
+  doc.setFontSize(16)
+  doc.setFont('Helvetica')
 }
 
 // Cursor Utils
@@ -45,6 +48,7 @@ export function calcCursorYPositionText(
   let cursorYPosition: number = calcCursorYPosition(blockContext, options)
 
   cursorYPosition += getTextHeight(doc, text, maxWidth || 0, options)
+  console.log('🚀 ~ cursorYPosition:', cursorYPosition)
 
   return cursorYPosition
 }
@@ -72,11 +76,6 @@ export function getTextHeight(
   // maxHeight?: number
 ): number {
   const fontSize = options.fontSize || 16
-  const fontFamily = options.fontFamily || 'helvetica'
-
-  // Set the font and size in the jsPDF document
-  doc.setFont(fontFamily)
-  doc.setFontSize(fontSize)
 
   // Calculate the line height based on the font size
   const lineHeight = (doc.getLineHeightFactor() * fontSize) / doc.internal.scaleFactor
@@ -130,7 +129,7 @@ export function calcXPosition(
   blockContext: BlockContext,
   x: number,
   text: string,
-  options: BaseTextOptions & BaseTextOptions
+  options: BaseTextOptions
 ) {
   const { leftOffset, rightOffset } = options
 
@@ -160,9 +159,9 @@ export function calcXPosition(
 export function calcYPosition(
   y: number,
   blockContext: BlockContext,
-  options: YOffsetOptions & MarginOptions
+  options: BaseTextOptions
 ) {
-  const { topOffset, bottomOffset } = options
+  const { topOffset } = options
   const { marginTop } = options
 
   if (blockContext.y) y += blockContext.y
@@ -172,7 +171,6 @@ export function calcYPosition(
   }
 
   if (topOffset) y += topOffset
-  if (bottomOffset) y -= bottomOffset
 
   if (marginTop) y += marginTop
 

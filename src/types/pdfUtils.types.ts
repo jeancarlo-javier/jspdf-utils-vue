@@ -59,9 +59,9 @@ export interface YOffsetOptions {
   bottomOffset?: number
 }
 
-export interface Offsets extends XOffsetOptions, YOffsetOptions {}
+interface Offsets extends XOffsetOptions, YOffsetOptions {}
 
-export interface MarginOptions extends Offsets {
+interface MarginOptions extends Offsets {
   marginTop?: number
   marginBottom?: number
   marginLeft?: number
@@ -79,6 +79,8 @@ export interface BaseElementOptions extends Offsets, MarginOptions {
 // Custom Text Options
 export interface BaseTextOptions extends BaseElementOptions {
   fontSize?: number
+  fontWeight?: number | string
+  fontStyle?: 'normal' | 'italic' | 'oblique'
   fontFamily?: string
   textCenter?: boolean
   textAlign?: 'left' | 'center' | 'right' | 'justify'

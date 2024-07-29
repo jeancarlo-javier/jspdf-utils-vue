@@ -1,4 +1,5 @@
 import {
+  resetDocConfig,
   getMaxTextWidth,
   calcCursorYPosition,
   calcCursorYPositionText,
@@ -21,6 +22,18 @@ export function addText(
   text: string,
   options: BaseTextOptions = {}
 ): void {
+  // console.log(options.fontFamily || 'Helvetica')
+
+  console.log({
+    fontFamily: options.fontFamily || 'Helvetica',
+    fontWeight: options.fontWeight
+  })
+
+  doc.setFont(
+    options.fontFamily || 'Helvetica',
+    options.fontStyle || 'normal',
+    options.fontWeight || 400
+  )
   doc.setFontSize(options.fontSize || 16)
 
   if (blockContext.numberOfElements > 0) {
@@ -38,13 +51,9 @@ export function addText(
 
   if (textCenter) x = centerTextHorizontal(doc, text, options)
 
-  // getTextWidth(doc, text, options)
   x = calcXPosition(doc, blockContext, x, text, options)
 
-  y = calcYPosition(y, blockContext, {
-    topOffset: options.topOffset,
-    bottomOffset: options.bottomOffset
-  })
+  y = calcYPosition(y, blockContext, options)
 
   doc.text(
     text,
@@ -53,7 +62,8 @@ export function addText(
     {
       baseline: 'top',
       maxWidth: elementOptions.maxWidth,
-      align: options.textAlign
+      align: options.textAlign,
+      renderingMode: 'fill'
     }
     // 'center'
   )
@@ -63,6 +73,8 @@ export function addText(
   )
 
   blockContext.addElement()
+
+  resetDocConfig(doc)
 }
 
 export function addLine(
