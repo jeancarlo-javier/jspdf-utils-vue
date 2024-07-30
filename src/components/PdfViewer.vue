@@ -42,27 +42,56 @@ onMounted(async () => {
   const blockContext1 = new BlockContext({
     id: 'header',
     // maxWidth: 200,
-    paddingVertical: 30
+    paddingVertical: 30,
+    x: 70
   })
 
-  pdfElements.addLine(doc, blockContext1)
-
+  pdfElements.addLine(doc, blockContext1, {
+    x: 200,
+    y: 0,
+    maxWidth: 100,
+    marginBottom: 10
+  })
   pdfElements.addText(doc, blockContext1, 'Lorem ipsum dolor sit consectetur.', {
     fontSize: 35,
-    textCenter: true,
-    textAlign: 'center',
     fontFamily: 'Montserrat',
     fontWeight: 'bold'
   })
-  pdfElements.addLine(doc, blockContext1)
-  pdfElements.addText(doc, blockContext1, 'Lorem ipsum dolor sit consectetur.', {
-    fontSize: 35,
-    textCenter: true,
-    fontFamily: 'Montserrat',
-    textAlign: 'center'
+  pdfElements.addLine(doc, blockContext1, {
+    y: 0,
+    x: 0,
+    maxWidth: 100,
+    leftOffset: 0,
+    marginTop: 10,
+    marginBottom: 15
   })
-
-  pdfElements.addLine(doc, blockContext1)
+  pdfElements.addText(
+    doc,
+    blockContext1,
+    'Lorem ipsum dolor sit amet consectetur adipiscing elit elementum, hendrerit augue ultricies volutpat congue tincidunt posuere, luctus interdum metus integer aliquet suspendisse condimentum. In natoque tortor taciti integer pellentesque venenatis leo suspendisse urna eros, vel cum ante posuere neque porta ac ullamcorper litora, tellus auctor platea turpis fusce accumsan duis tristique nisl.',
+    {
+      maxWidth: 320,
+      fontSize: 15,
+      fontFamily: 'Montserrat',
+      fontWeight: 'normal'
+    }
+  )
+  pdfElements.addLine(doc, blockContext1, {
+    maxWidth: 320,
+    marginTop: 10,
+    marginBottom: 10
+  })
+  pdfElements.addText(
+    doc,
+    blockContext1,
+    'Lorem ipsum dolor sit amet consectetur adipiscing elit elementum, hendrerit augue ultricies volutpat congue tincidunt posuere, luctus interdum metus integer aliquet suspendisse condimentum. In natoque tortor taciti integer pellentesque venenatis leo suspendisse urna eros, vel cum ante posuere neque porta ac ullamcorper litora, tellus auctor platea turpis fusce accumsan duis tristique nisl.',
+    {
+      maxWidth: 320,
+      fontSize: 15,
+      fontFamily: 'Montserrat',
+      fontWeight: 'normal'
+    }
+  )
 
   const blob = doc.output('blob')
 

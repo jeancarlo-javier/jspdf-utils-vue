@@ -2,7 +2,7 @@ import {
   resetDocConfig,
   getMaxTextWidth,
   calcCursorYPosition,
-  calcCursorYPositionText,
+  getTextHeight,
   getDocWidth,
   centerTextHorizontal,
   calcXPosition,
@@ -44,7 +44,7 @@ export function addText(
 
   if (textCenter) x = centerTextHorizontal(doc, text, options)
 
-  x = calcXPosition(doc, blockContext, x, text, options)
+  x = calcXPosition(doc, blockContext, x, options, text)
 
   y = calcYPosition(y, blockContext, options)
 
@@ -61,9 +61,13 @@ export function addText(
     // 'center'
   )
 
-  blockContext.updateCursorYPosition(
-    calcCursorYPositionText(doc, blockContext, options, elementOptions.maxWidth || 0, text)
+  const cursorYPosition = calcCursorYPosition(
+    blockContext,
+    options,
+    getTextHeight(doc, text, elementOptions.maxWidth || 0, options)
   )
+
+  blockContext.updateCursorYPosition(cursorYPosition)
 
   blockContext.addElement()
 
@@ -81,7 +85,8 @@ export function addLine(
     )
   }
 
-  let { y = 0 } = options
+  let { x = 0, y = 0 } = options
+  const { maxWidth } = options
 
   y = calcYPosition(y, blockContext, {
     topOffset: options.topOffset,
@@ -89,16 +94,13 @@ export function addLine(
     marginTop: options.marginTop,
     marginBottom: options.marginBottom
   })
-  // console.log(options.topOffset, options.bottomOffset)
+  x = calcXPosition(doc, blockContext, x, options)
 
-  doc.line(0, y, getDocWidth(doc), y)
+  const x2 = x + (maxWidth || getDocWidth(doc))
 
-  blockContext.updateCursorYPosition(
-    calcCursorYPosition(blockContext, {
-      marginBottom: options.marginBottom,
-      marginTop: options.marginTop
-    })
-  )
+  doc.line(x, y, x2, y)
+
+  blockContext.updateCursorYPosition(calcCursorYPosition(blockContext, options, options.y))
 
   blockContext.addElement()
 }
