@@ -72,8 +72,11 @@ export function getTextHeight(
   options: BaseTextOptions
 ): number {
   const fontSize = options.fontSize || 16
-  const lineHeight = (doc.getLineHeightFactor() * fontSize) / doc.internal.scaleFactor
+  const lineHeight =
+    ((options.lineHeight || doc.getLineHeightFactor()) * fontSize) / doc.internal.scaleFactor
+
   const lines = doc.splitTextToSize(text, maxWidth)
+
   return lines.length * lineHeight
 }
 
@@ -131,15 +134,22 @@ export function calcYPosition(
   blockContext: BlockContext,
   options: BaseTextOptions
 ): number {
-  const { topOffset, marginTop } = options
+  const { topOffset, bottomOffset, marginTop } = options
 
   if (blockContext.y) y += blockContext.y
   if (blockContext.paddingVertical && blockContext.numberOfElements === 0) {
     y += blockContext.paddingVertical
   }
   if (topOffset) y += topOffset
+  if (bottomOffset) y -= bottomOffset
   if (marginTop) y += marginTop
   y += blockContext.cursorYPosition || 0
+
+  const fontSize = options.fontSize || 16
+
+  if (options.lineHeight) {
+    y = y + (options.lineHeight - 1) * fontSize
+  }
 
   return y
 }

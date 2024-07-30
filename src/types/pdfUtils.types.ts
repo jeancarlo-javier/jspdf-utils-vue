@@ -84,6 +84,7 @@ export interface BaseTextOptions extends BaseElementOptions {
   fontFamily?: string
   textCenter?: boolean
   textAlign?: 'left' | 'center' | 'right' | 'justify'
+  lineHeight?: number
 }
 
 export interface AddLineOptions extends BaseElementOptions {}

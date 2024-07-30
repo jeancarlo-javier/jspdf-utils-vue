@@ -41,55 +41,81 @@ onMounted(async () => {
 
   const blockContext1 = new BlockContext({
     id: 'header',
-    // maxWidth: 200,
+    maxWidth: 175,
     paddingVertical: 30,
-    x: 70
+    x: 30
   })
 
+  const lineHeight = 1.15
+
   pdfElements.addLine(doc, blockContext1, {
-    x: 200,
-    y: 0,
     maxWidth: 100,
+    x: 75,
+    y: 0,
     marginBottom: 10
   })
+
   pdfElements.addText(doc, blockContext1, 'Lorem ipsum dolor sit consectetur.', {
-    fontSize: 35,
+    fontSize: 20,
     fontFamily: 'Montserrat',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    lineHeight
   })
+
   pdfElements.addLine(doc, blockContext1, {
     y: 0,
     x: 0,
     maxWidth: 100,
     leftOffset: 0,
-    marginTop: 10,
+    marginTop: 15,
     marginBottom: 15
   })
+
   pdfElements.addText(
     doc,
     blockContext1,
-    'Lorem ipsum dolor sit amet consectetur adipiscing elit elementum, hendrerit augue ultricies volutpat congue tincidunt posuere, luctus interdum metus integer aliquet suspendisse condimentum. In natoque tortor taciti integer pellentesque venenatis leo suspendisse urna eros, vel cum ante posuere neque porta ac ullamcorper litora, tellus auctor platea turpis fusce accumsan duis tristique nisl.',
+    'Lorem ipsum dolor sit amet consectetur adipiscing elit, etiam taciti egestas morbi nunc nulla, nisl lobortis mi vivamus integer condimentum. Tristique platea elementum duis posuere sagittis lobortis, venenatis curae cras mollis.',
     {
-      maxWidth: 320,
-      fontSize: 15,
+      fontSize: 14,
       fontFamily: 'Montserrat',
-      fontWeight: 'normal'
+      fontWeight: 'normal',
+      lineHeight
     }
   )
+
   pdfElements.addLine(doc, blockContext1, {
-    maxWidth: 320,
+    maxWidth: 100,
+    x: 75,
+    y: 0,
     marginTop: 10,
     marginBottom: 10
   })
+
+  pdfElements.addText(doc, blockContext1, 'Duis ultricies felis.', {
+    fontSize: 20,
+    fontFamily: 'Montserrat',
+    fontWeight: 'bold',
+    lineHeight
+  })
+
+  pdfElements.addLine(doc, blockContext1, {
+    y: 0,
+    x: 0,
+    maxWidth: 100,
+    leftOffset: 0,
+    marginTop: 15,
+    marginBottom: 15
+  })
+
   pdfElements.addText(
     doc,
     blockContext1,
-    'Lorem ipsum dolor sit amet consectetur adipiscing elit elementum, hendrerit augue ultricies volutpat congue tincidunt posuere, luctus interdum metus integer aliquet suspendisse condimentum. In natoque tortor taciti integer pellentesque venenatis leo suspendisse urna eros, vel cum ante posuere neque porta ac ullamcorper litora, tellus auctor platea turpis fusce accumsan duis tristique nisl.',
+    'Rhoncus fermentum litora suscipit odio per tempor euismod himenaeos mollis tellus dapibus, rutrum morbi in suspendisse lobortis justo etiam at facilisis porttitor, dictumst neque aenean sagittis nam curae montes posuere cursus semper.',
     {
-      maxWidth: 320,
-      fontSize: 15,
+      fontSize: 14,
       fontFamily: 'Montserrat',
-      fontWeight: 'normal'
+      fontWeight: 'normal',
+      lineHeight
     }
   )
 

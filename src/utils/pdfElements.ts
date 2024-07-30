@@ -14,7 +14,7 @@ import type {
   BaseElementOptions,
   BlockContext
 } from '../types/pdfUtils.types'
-import type { jsPDF } from 'jspdf'
+import type { jsPDF, TextOptionsLight } from 'jspdf'
 
 export function addText(
   doc: jsPDF,
@@ -22,12 +22,12 @@ export function addText(
   text: string,
   options: BaseTextOptions = {}
 ): void {
-  doc.setFont(
-    options.fontFamily || 'Helvetica',
-    options.fontStyle || 'normal',
-    options.fontWeight || 400
-  )
-  doc.setFontSize(options.fontSize || 16)
+  const fontSize = options.fontSize || 16
+  const fontFamily = options.fontFamily || 'Helvetica'
+  const lineHeight = options.lineHeight || 1.15
+
+  doc.setFont(fontFamily, options.fontStyle || 'normal', options.fontWeight || 400)
+  doc.setFontSize(fontSize)
 
   if (blockContext.numberOfElements > 0) {
     blockContext.updateCursorYPosition(
@@ -48,18 +48,15 @@ export function addText(
 
   y = calcYPosition(y, blockContext, options)
 
-  doc.text(
-    text,
-    x,
-    y,
-    {
-      baseline: 'top',
-      maxWidth: elementOptions.maxWidth,
-      align: options.textAlign,
-      renderingMode: 'fill'
-    }
-    // 'center'
-  )
+  const textSettings: TextOptionsLight = {
+    baseline: 'top',
+    maxWidth: elementOptions.maxWidth,
+    align: options.textAlign,
+    renderingMode: 'fill',
+    lineHeightFactor: lineHeight
+  }
+
+  doc.text(text, x, y, textSettings)
 
   const cursorYPosition = calcCursorYPosition(
     blockContext,
