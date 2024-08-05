@@ -8,7 +8,8 @@ import {
   resetDocConfig,
   calcCursorYPosition,
   calcXPosition,
-  getTextWidth
+  getTextWidth,
+  detectPageBreak
 } from '@/utils/pdfUtils'
 import { BaseTextOptions, BlockContext, BaseElementOptions } from '@/types/pdfUtils.types'
 import { MontserratRegular } from '../fonts/montserrat-fonts'
@@ -207,6 +208,28 @@ describe('PDF Utils', () => {
 
       const textWidth = getTextWidth(doc, text, options)
       expect(textWidth).toBe((10 * 20) / doc.internal.scaleFactor)
+    })
+  })
+
+  describe('detectPageBreak', () => {
+    it('returns true if the currentYPostion is greater than the maxPageHeight', () => {
+      const blockContext = new BlockContext({
+        cursorYPosition: getDocHeight(doc) + 10
+      })
+
+      const pageBreak = detectPageBreak(doc, blockContext, 1)
+
+      expect(pageBreak).toBe(true)
+    })
+
+    it('returns false if the currentYPostion is less than the maxPageHeight', () => {
+      const blockContext = new BlockContext({
+        cursorYPosition: getDocHeight(doc) - 10
+      })
+
+      const pageBreak = detectPageBreak(doc, blockContext, 1)
+
+      expect(pageBreak).toBe(false)
     })
   })
 })

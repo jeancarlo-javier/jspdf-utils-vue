@@ -43,6 +43,10 @@ export class BlockContext implements BlockContextBase {
     this.cursorYPosition = newY
   }
 
+  resetCursorYPosition(): void {
+    this.cursorYPosition = 0
+  }
+
   addElement(): void {
     this.numberOfElements++
   }

@@ -19,6 +19,25 @@ export function resetDocConfig(doc: jsPDF): void {
   doc.setFont('Helvetica')
 }
 
+export function detectPageBreak(
+  doc: jsPDF,
+  blockContext: BlockContext,
+  elementHeight: number
+): boolean {
+  return blockContext.cursorYPosition + elementHeight > getDocHeight(doc)
+}
+
+export function breakPageIfNeeded(
+  doc: jsPDF,
+  blockContext: BlockContext,
+  elementHeight: number
+): void {
+  if (detectPageBreak(doc, blockContext, elementHeight)) {
+    doc.addPage()
+    blockContext.resetCursorYPosition()
+  }
+}
+
 // Cursor Utilities
 export function calcCursorYPosition(
   blockContext: BlockContext,

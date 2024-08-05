@@ -5,3 +5,9 @@
 :root {
   color-scheme: light dark;
 }
+
+.vue-pdf-embed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

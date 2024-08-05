@@ -4,10 +4,10 @@ import {
   calcCursorYPosition,
   getTextHeight,
   getDocWidth,
-  // getDocHeight,
   centerTextHorizontal,
   calcXPosition,
-  calcYPosition
+  calcYPosition,
+  breakPageIfNeeded
   // centerLineHorizontal
 } from './pdfUtils'
 import type {
@@ -41,13 +41,17 @@ export function addText(
     maxWidth: getMaxTextWidth(options.maxWidth || 0, getDocWidth(doc), blockContext)
   }
 
+  const textHeight = getTextHeight(doc, text, elementOptions.maxWidth || 0, options)
+
+  // Apply page break before adding text if needed
+  breakPageIfNeeded(doc, blockContext, textHeight)
+
   let { x = 0, y = 0 } = options
   const { textCenter } = options
 
   if (textCenter) x = centerTextHorizontal(doc, text, options)
 
   x = calcXPosition(doc, blockContext, x, options, text)
-
   y = calcYPosition(y, blockContext, options)
 
   const textSettings: TextOptionsLight = {
@@ -60,11 +64,7 @@ export function addText(
 
   doc.text(text, x, y, textSettings)
 
-  const cursorYPosition = calcCursorYPosition(
-    blockContext,
-    options,
-    getTextHeight(doc, text, elementOptions.maxWidth || 0, options)
-  )
+  const cursorYPosition = calcCursorYPosition(blockContext, options, textHeight)
 
   blockContext.updateCursorYPosition(cursorYPosition)
 
@@ -100,6 +100,8 @@ export function addLine(
   doc.line(x, y, x2, y)
 
   blockContext.updateCursorYPosition(calcCursorYPosition(blockContext, options, options.y))
+
+  breakPageIfNeeded(doc, blockContext, 1)
 
   blockContext.addElement()
 }
