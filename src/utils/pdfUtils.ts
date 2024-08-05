@@ -102,6 +102,11 @@ export function getMaxTextWidth(
   return maxWidth
 }
 
+// Line Utilities
+// export function centerLineHorizontal(doc: jsPDF, blockContext: BlockContext): number {
+//   const docWidth = getDocWidth(doc)
+// }
+
 // Position Calculation Utilities
 export function calcXPosition(
   doc: jsPDF,

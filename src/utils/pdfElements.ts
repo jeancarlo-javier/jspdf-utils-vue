@@ -4,13 +4,15 @@ import {
   calcCursorYPosition,
   getTextHeight,
   getDocWidth,
+  // getDocHeight,
   centerTextHorizontal,
   calcXPosition,
   calcYPosition
+  // centerLineHorizontal
 } from './pdfUtils'
 import type {
   BaseTextOptions,
-  AddLineOptions,
+  BaseLineOptions,
   BaseElementOptions,
   BlockContext
 } from '../types/pdfUtils.types'
@@ -74,7 +76,7 @@ export function addText(
 export function addLine(
   doc: jsPDF,
   blockContext: BlockContext,
-  options: AddLineOptions = {}
+  options: BaseLineOptions = {}
 ): void {
   if (blockContext.numberOfElements > 0) {
     blockContext.updateCursorYPosition(
