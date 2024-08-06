@@ -208,7 +208,6 @@ describe('PDF Utils', () => {
         const blockContext = new BlockContext({})
         const options: BaseTextOptions = { lineHeight: 1.15 }
         const y = calcYPosition(10, blockContext, options)
-        console.log('🚀 ~ it ~ y:', y)
 
         expect(Number(y.toFixed(2))).toBe(12.4)
 
