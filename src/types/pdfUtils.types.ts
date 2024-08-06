@@ -95,3 +95,7 @@ export interface BaseTextOptions extends BaseElementOptions {
 export interface BaseLineOptions extends BaseElementOptions {
   center?: boolean
 }
+
+export interface BaseListOptions extends BaseElementOptions {
+  // bullet?: string
+}

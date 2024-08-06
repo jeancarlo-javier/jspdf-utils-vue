@@ -8,6 +8,7 @@ import {
   resetDocConfig,
   calcCursorYPosition,
   calcXPosition,
+  calcYPosition,
   getTextWidth,
   detectPageBreak
 } from '@/utils/pdfUtils'
@@ -162,6 +163,72 @@ describe('PDF Utils', () => {
 
         const x = calcXPosition(doc, blockContext, 0, options, testText)
         expect(x).toBe(0)
+      })
+    })
+  })
+
+  describe('calcYPosition', () => {
+    describe('basic position calculation', () => {
+      it('calculates y position with blockContext.y', () => {
+        const blockContext = new BlockContext({ y: 100 })
+        const y = calcYPosition(0, blockContext, {})
+        expect(y).toBe(100)
+      })
+
+      it('calculates y position with paddingVertical', () => {
+        const blockContext = new BlockContext({ paddingVertical: 20 })
+        const y = calcYPosition(0, blockContext, {})
+        expect(y).toBe(20)
+      })
+
+      it('calculates y position with topOffset', () => {
+        const blockContext = new BlockContext({})
+        const options: BaseTextOptions = { topOffset: 10 }
+        const y = calcYPosition(0, blockContext, options)
+        expect(y).toBe(10)
+      })
+
+      it('calculates y position with bottomOffset', () => {
+        const blockContext = new BlockContext({})
+        const options: BaseTextOptions = { bottomOffset: 10 }
+        const y = calcYPosition(0, blockContext, options)
+        expect(y).toBe(-10)
+      })
+
+      it('calculates y position with marginTop', () => {
+        const blockContext = new BlockContext({})
+        const options: BaseTextOptions = { marginTop: 10 }
+        const y = calcYPosition(0, blockContext, options)
+        expect(y).toBe(10)
+      })
+    })
+
+    describe('position calculation with text options', () => {
+      it('calculates y position with specified lineHeight', () => {
+        const blockContext = new BlockContext({})
+        const options: BaseTextOptions = { lineHeight: 1.15 }
+        const y = calcYPosition(10, blockContext, options)
+        console.log('🚀 ~ it ~ y:', y)
+
+        expect(Number(y.toFixed(2))).toBe(12.4)
+
+        const y2 = calcYPosition(10, blockContext, { ...options, bottomOffset: 10 })
+        expect(Number(y2.toFixed(2))).toBe(2.4)
+
+        const y3 = calcYPosition(10, blockContext, { ...options, topOffset: 10 })
+        expect(Number(y3.toFixed(2))).toBe(22.4)
+      })
+
+      it('calculates y position with default lineHeight', () => {
+        const blockContext = new BlockContext({})
+        const options: BaseTextOptions = {
+          topOffset: 10,
+          bottomOffset: 10,
+          marginTop: 30
+        }
+
+        const y = calcYPosition(0, blockContext, options)
+        expect(y).toBe(30)
       })
     })
   })

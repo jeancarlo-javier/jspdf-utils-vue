@@ -4,6 +4,7 @@ import type {
   BaseElementOptions,
   BlockContext
 } from '../types/pdfUtils.types'
+import type { TextOptionsLight } from 'jspdf'
 
 // Document Utilities
 export function getDocWidth(doc: jsPDF): number {
@@ -121,7 +122,7 @@ export function getMaxTextWidth(
   return maxWidth
 }
 
-// Line Utilities
+// Element Utilities
 // export function centerLineHorizontal(doc: jsPDF, blockContext: BlockContext): number {
 //   const docWidth = getDocWidth(doc)
 // }
@@ -131,10 +132,15 @@ export function calcXPosition(
   doc: jsPDF,
   blockContext: BlockContext,
   x: number,
-  options: BaseTextOptions,
+  options: BaseElementOptions | BaseTextOptions,
   text?: string
 ): number {
-  const { leftOffset, rightOffset, textAlign } = options
+  const { leftOffset, rightOffset } = options
+
+  let textAlign: TextOptionsLight['align'] = 'left'
+  if ('textAlign' in options) {
+    textAlign = options.textAlign || 'left'
+  }
 
   if (blockContext.x) x += blockContext.x
   if (blockContext.paddingHorizontal) x += blockContext.paddingHorizontal
@@ -156,7 +162,7 @@ export function calcXPosition(
 export function calcYPosition(
   y: number,
   blockContext: BlockContext,
-  options: BaseTextOptions
+  options: BaseElementOptions | BaseTextOptions
 ): number {
   const { topOffset, bottomOffset, marginTop } = options
 
@@ -169,10 +175,12 @@ export function calcYPosition(
   if (marginTop) y += marginTop
   y += blockContext.cursorYPosition || 0
 
-  const fontSize = options.fontSize || 16
+  if ('lineHeight' in options) {
+    const fontSize: number = options.fontSize || 16
 
-  if (options.lineHeight) {
-    y = y + (options.lineHeight - 1) * fontSize
+    const lineHeight: number = options.lineHeight || 1.15
+
+    y = y + (lineHeight - 1) * fontSize
   }
 
   return y

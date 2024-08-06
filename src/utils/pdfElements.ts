@@ -10,13 +10,22 @@ import {
   breakPageIfNeeded
   // centerLineHorizontal
 } from './pdfUtils'
+import {
+  setDocumentFont,
+  adjustTextCursorPosition,
+  getTextSettings,
+  calculateLineYPosition,
+  calculateLineXPosition,
+  adjustLineCursorPosition
+} from './elementUtils'
+
 import type {
   BaseTextOptions,
   BaseLineOptions,
-  BaseElementOptions,
   BlockContext
+  // BaseListOptions
 } from '../types/pdfUtils.types'
-import type { jsPDF, TextOptionsLight } from 'jspdf'
+import type { jsPDF } from 'jspdf'
 
 export function addText(
   doc: jsPDF,
@@ -24,48 +33,42 @@ export function addText(
   text: string,
   options: BaseTextOptions = {}
 ): void {
-  const fontSize = options.fontSize || 16
-  const fontFamily = options.fontFamily || 'Helvetica'
-  const lineHeight = options.lineHeight || 1.15
+  const {
+    fontSize = 16,
+    fontFamily = 'Helvetica',
+    fontStyle = 'normal',
+    fontWeight = 400,
+    lineHeight = 1.15,
+    maxWidth = 0,
+    textAlign,
+    textCenter
+  } = options
 
-  doc.setFont(fontFamily, options.fontStyle || 'normal', options.fontWeight || 400)
-  doc.setFontSize(fontSize)
+  let { x: initialX = 0, y: initialY = 0 } = options
+
+  setDocumentFont(doc, fontFamily, fontStyle, fontWeight, fontSize)
 
   if (blockContext.numberOfElements > 0) {
-    blockContext.updateCursorYPosition(
-      blockContext.cursorYPosition - blockContext.paddingVertical
-    )
+    adjustTextCursorPosition(blockContext)
   }
 
-  const elementOptions: BaseElementOptions = {
-    maxWidth: getMaxTextWidth(options.maxWidth || 0, getDocWidth(doc), blockContext)
-  }
+  const elementMaxWidth = getMaxTextWidth(maxWidth || 0, getDocWidth(doc), blockContext)
 
-  const textHeight = getTextHeight(doc, text, elementOptions.maxWidth || 0, options)
+  const textHeight = getTextHeight(doc, text, elementMaxWidth || 0, options)
 
   // Apply page break before adding text if needed
   breakPageIfNeeded(doc, blockContext, textHeight)
 
-  let { x = 0, y = 0 } = options
-  const { textCenter } = options
+  if (textCenter) initialX = centerTextHorizontal(doc, text, options)
 
-  if (textCenter) x = centerTextHorizontal(doc, text, options)
+  initialX = calcXPosition(doc, blockContext, initialX, options, text)
+  initialY = calcYPosition(initialY, blockContext, options)
 
-  x = calcXPosition(doc, blockContext, x, options, text)
-  y = calcYPosition(y, blockContext, options)
+  const textSettings = getTextSettings(elementMaxWidth, textAlign, lineHeight)
 
-  const textSettings: TextOptionsLight = {
-    baseline: 'top',
-    maxWidth: elementOptions.maxWidth,
-    align: options.textAlign,
-    renderingMode: 'fill',
-    lineHeightFactor: lineHeight
-  }
-
-  doc.text(text, x, y, textSettings)
+  doc.text(text, initialX, initialY, textSettings)
 
   const cursorYPosition = calcCursorYPosition(blockContext, options, textHeight)
-
   blockContext.updateCursorYPosition(cursorYPosition)
 
   blockContext.addElement()
@@ -78,35 +81,50 @@ export function addLine(
   blockContext: BlockContext,
   options: BaseLineOptions = {}
 ): void {
+  const {
+    x: initialX = 0,
+    y: initialY = 0,
+    maxWidth,
+    topOffset,
+    bottomOffset,
+    marginTop,
+    marginBottom
+  } = options
+
   if (blockContext.numberOfElements > 0) {
     blockContext.updateCursorYPosition(
       blockContext.cursorYPosition - blockContext.paddingVertical
     )
   }
 
-  let { x = 0, y = 0 } = options
-  const { maxWidth } = options
-
-  y = calcYPosition(y, blockContext, {
-    topOffset: options.topOffset,
-    bottomOffset: options.bottomOffset,
-    marginTop: options.marginTop,
-    marginBottom: options.marginBottom
+  const x = calculateLineXPosition(doc, blockContext, initialX, options)
+  const y = calculateLineYPosition(initialY, blockContext, {
+    topOffset,
+    bottomOffset,
+    marginTop,
+    marginBottom
   })
-  x = calcXPosition(doc, blockContext, x, options)
 
   const x2 = x + (maxWidth || getDocWidth(doc))
 
   doc.line(x, y, x2, y)
 
-  blockContext.updateCursorYPosition(calcCursorYPosition(blockContext, options, options.y))
+  adjustLineCursorPosition(blockContext, options)
 
   breakPageIfNeeded(doc, blockContext, 1)
 
   blockContext.addElement()
 }
 
+// export function addList(
+//   doc: jsPDF,
+//   blockContext: BlockContext,
+//   list: string[],
+//   options: BaseListOptions
+// ): void {}
+
 export default {
   addText,
   addLine
+  // addList
 }
