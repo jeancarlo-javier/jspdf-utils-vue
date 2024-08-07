@@ -69,6 +69,7 @@ export function addText(
   doc.text(text, initialX, initialY, textSettings)
 
   const cursorYPosition = calcCursorYPosition(blockContext, options, textHeight)
+
   blockContext.updateCursorYPosition(cursorYPosition)
 
   blockContext.addElement()

@@ -15,7 +15,7 @@
 import { jsPDF } from 'jspdf'
 import { ref, onMounted, watch } from 'vue'
 import VuePdfEmbed from 'vue-pdf-embed'
-import generateOxfordTemplate from '../templates/oxford-template'
+import generateTemplate from '../templates/test-template'
 
 const pdfViewer = ref<HTMLDivElement>()
 const pdfBase64 = ref<string>()
@@ -55,7 +55,7 @@ onMounted(async () => {
     doc.addFileToVFS('Montserrat-Semibold.ttf', MontserratSemibold)
     doc.addFont('Montserrat-Semibold.ttf', 'Montserrat', 'normal', 600)
 
-    generateOxfordTemplate(doc)
+    generateTemplate(doc)
 
     const blob = doc.output('blob')
 

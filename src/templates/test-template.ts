@@ -1,10 +1,17 @@
 import type { jsPDF } from 'jspdf'
 import { addText, addLine } from '../utils/pdfElements'
-import { BlockContext } from '../types/pdfUtils.types'
+import { BlockContext, PageContext } from '../types/pdfUtils.types'
 import { getDocWidth } from '../utils/pdfUtils'
 
 const generateTemplate = (doc: jsPDF) => {
+  const pageContext: PageContext = {
+    padding: 60,
+    paddingVertical: 30
+    // paddingHorizontal: 30
+  }
+
   const blockContext1 = new BlockContext({
+    pageContext,
     id: 'header'
   })
 
@@ -27,8 +34,7 @@ const generateTemplate = (doc: jsPDF) => {
     textCenter: true,
     textAlign: 'center',
     fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 20
+    fontWeight: 'bold'
   })
 
   addLine(doc, blockContext1, {
@@ -54,8 +60,9 @@ const generateTemplate = (doc: jsPDF) => {
   })
 
   const blockContext2 = new BlockContext({
-    cursorYPosition: blockContext1.cursorYPosition,
-    paddingHorizontal: 30
+    pageContext,
+    cursorYPosition: blockContext1.cursorYPosition
+    // paddingHorizontal: 30
   })
 
   addText(doc, blockContext2, 'Summary', {
@@ -177,8 +184,9 @@ const generateTemplate = (doc: jsPDF) => {
   })
 
   const skillsColumn1 = new BlockContext({
-    cursorYPosition: blockContext2.cursorYPosition,
-    paddingHorizontal: 30
+    pageContext,
+    cursorYPosition: blockContext2.cursorYPosition
+    // paddingHorizontal: 30
   })
 
   addText(doc, skillsColumn1, 'Effective Communication', {
@@ -199,6 +207,7 @@ const generateTemplate = (doc: jsPDF) => {
   })
 
   const skillsColumn2 = new BlockContext({
+    pageContext,
     cursorYPosition: blockContext2.cursorYPosition,
     x: docWidth / 2,
     maxWidth: docWidth / 2 - blockContext2.paddingHorizontal * 2
@@ -225,14 +234,49 @@ const generateTemplate = (doc: jsPDF) => {
   })
 
   const blockContext3 = new BlockContext({
-    cursorYPosition: skillsColumn1.cursorYPosition,
-    paddingHorizontal: 30
+    pageContext,
+    cursorYPosition: skillsColumn1.cursorYPosition
+    // paddingHorizontal: 30
   })
 
   addLine(doc, blockContext3, {
     marginTop: 10,
     marginBottom: 10,
     maxWidth: docWidth - blockContext3.paddingHorizontal * 2
+  })
+
+  addText(doc, blockContext3, 'Languages', {
+    ...defaultTextOptions,
+    fontSize: h2FontSize,
+    fontWeight: 'bold',
+    marginBottom: 3
+  })
+
+  addText(doc, blockContext3, 'English', {
+    ...defaultTextOptions,
+    marginBottom: 4
+  })
+
+  addText(doc, blockContext3, 'Spanish', {
+    ...defaultTextOptions,
+    marginBottom: 4
+  })
+
+  addText(doc, blockContext3, 'Languages', {
+    ...defaultTextOptions,
+    fontSize: h2FontSize,
+    fontWeight: 'bold',
+    marginBottom: 3
+  })
+
+  addText(doc, blockContext3, 'English', {
+    ...defaultTextOptions,
+    marginBottom: 4
+  })
+
+  addText(doc, blockContext3, 'Spanish', {
+    ...defaultTextOptions,
+    marginBottom: 4
   })
 
   addText(doc, blockContext3, 'Languages', {

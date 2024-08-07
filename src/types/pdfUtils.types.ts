@@ -7,6 +7,7 @@ export interface BlockContextBase {
   maxWidth?: number
   paddingHorizontal: number
   paddingVertical: number
+  pageContext?: PageContext
 }
 
 export class BlockContext implements BlockContextBase {
@@ -18,6 +19,7 @@ export class BlockContext implements BlockContextBase {
   paddingVertical: number
   x?: number
   y?: number
+  pageContext?: PageContext
 
   constructor({
     id = '',
@@ -27,7 +29,8 @@ export class BlockContext implements BlockContextBase {
     paddingHorizontal = 0,
     paddingVertical = 0,
     x = 0,
-    y = 0
+    y = 0,
+    pageContext
   }: Partial<BlockContextBase> = {}) {
     this.id = id
     this.numberOfElements = numberOfElements
@@ -37,6 +40,11 @@ export class BlockContext implements BlockContextBase {
     this.paddingVertical = paddingVertical
     this.x = x
     this.y = y
+    this.pageContext = pageContext
+
+    if (this.pageContext) {
+      this.cursorYPosition += this.pageContext.paddingVertical || this.pageContext.padding || 0
+    }
   }
 
   updateCursorYPosition(newY: number): void {
@@ -98,4 +106,10 @@ export interface BaseLineOptions extends BaseElementOptions {
 
 export interface BaseListOptions extends BaseElementOptions {
   // bullet?: string
+}
+
+export interface PageContext {
+  padding?: number
+  paddingVertical?: number
+  paddingHorizontal?: number
 }
