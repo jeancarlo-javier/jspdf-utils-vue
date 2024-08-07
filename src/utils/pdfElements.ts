@@ -24,7 +24,7 @@ import type {
   BaseLineOptions
   // BaseListOptions
 } from '../types/pdfUtils.types'
-import { BlockContext } from '../types/blockContext'
+import BlockContext from '../types/blockContext'
 import type { jsPDF } from 'jspdf'
 
 export function addText(

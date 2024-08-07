@@ -1,7 +1,7 @@
 import { calcXPosition, calcYPosition, calcCursorYPosition } from './pdfUtils'
 
 import type { jsPDF } from 'jspdf'
-import { BlockContext } from '../types/blockContext'
+import BlockContext from '../types/blockContext'
 import type { BaseLineOptions } from '../types/pdfUtils.types'
 import type { TextOptionsLight } from 'jspdf'
 

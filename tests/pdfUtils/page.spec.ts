@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { getDocHeight, detectPageBreak } from '@/utils/pdfUtils'
-import { BlockContext } from '@/types/pdfUtils.types'
+import BlockContext from '@/types/blockContext'
 import { jsPDF } from 'jspdf'
 
 describe('Page Break Detection', () => {

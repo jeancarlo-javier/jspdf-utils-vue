@@ -7,7 +7,7 @@ export interface BlockContextBase {
   maxWidth?: number
   paddingHorizontal: number
   paddingVertical: number
-  pageContext?: PageContext
+  pageContext?: PageContextBase
 }
 
 // Offsets
@@ -58,7 +58,8 @@ export interface BaseListOptions extends BaseElementOptions {
   // bullet?: string
 }
 
-export interface PageContext {
+export interface PageContextBase {
+  numberOfPages: number
   padding?: number
   paddingVertical?: number
   paddingHorizontal?: number

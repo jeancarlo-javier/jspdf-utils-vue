@@ -6,12 +6,9 @@ import {
   calcYPosition,
   getTextWidth
 } from '@/utils/pdfUtils'
-import {
-  BaseTextOptions,
-  BlockContext,
-  BaseElementOptions,
-  PageContext
-} from '@/types/pdfUtils.types'
+import { BaseTextOptions, BaseElementOptions } from '@/types/pdfUtils.types'
+import PageContext from '@/types/pageContext'
+import BlockContext from '@/types/blockContext'
 
 describe('Position Calculations', () => {
   let doc: jsPDF
@@ -26,6 +23,7 @@ describe('Position Calculations', () => {
       unit: 'px'
     })
   })
+
   describe('calcCursorYPosition', () => {
     it('calculates cursor Y position correctly', () => {
       const blockContext1 = new BlockContext()
@@ -53,11 +51,11 @@ describe('Position Calculations', () => {
     })
 
     it('calculates cursor Y position with pageContext', () => {
-      const pageContext: PageContext = { paddingVertical: 10 }
-      const blockContext = new BlockContext({ pageContext, cursorYPosition: 10 })
+      const pageContext = new PageContext({ paddingVertical: 10 })
+      const blockContext = new BlockContext({ pageContext })
       const options: BaseElementOptions = {}
       const cursorYPosition = calcCursorYPosition(blockContext, options, 0)
-      expect(cursorYPosition).toBe(20)
+      expect(cursorYPosition).toBe(10)
     })
   })
 
@@ -115,14 +113,14 @@ describe('Position Calculations', () => {
 
     describe('pageContext', () => {
       it('calculates x & y position with page padding', () => {
-        const pageContext: PageContext = { padding: 10 }
+        const pageContext: PageContextBase = { padding: 10 }
         const blockContext = new BlockContext({ pageContext })
         const y = calcYPosition(0, blockContext, {})
         expect(y).toBe(10)
       })
 
       it('calculates x position with page vertical padding', () => {
-        const pageContext: PageContext = { paddingVertical: 10 }
+        const pageContext: PageContextBase = { paddingVertical: 10 }
         const blockContext = new BlockContext({ pageContext })
         const y = calcYPosition(0, blockContext, {})
         expect(y).toBe(10)

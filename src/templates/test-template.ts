@@ -1,15 +1,14 @@
 import type { jsPDF } from 'jspdf'
 import { addText, addLine } from '../utils/pdfElements'
-import { PageContext } from '../types/pdfUtils.types'
-import { BlockContext } from '../types/blockContext'
+import PageContext from '../types/pageContext'
+import BlockContext from '../types/blockContext'
 import { getDocWidth } from '../utils/pdfUtils'
 
 const generateTemplate = (doc: jsPDF) => {
-  const pageContext: PageContext = {
-    padding: 60,
+  const pageContext = new PageContext({
+    padding: 30,
     paddingVertical: 30
-    // paddingHorizontal: 30
-  }
+  })
 
   const blockContext1 = new BlockContext({
     pageContext,

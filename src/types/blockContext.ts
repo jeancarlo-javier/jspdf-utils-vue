@@ -1,6 +1,7 @@
-import type { PageContext, BlockContextBase } from '../types/pdfUtils.types'
+import type { PageContextBase, BlockContextBase } from '../types/pdfUtils.types'
+import PageContext from './pageContext'
 
-export class BlockContext implements BlockContextBase {
+class BlockContext implements BlockContextBase {
   id: string
   numberOfElements: number
   cursorYPosition: number
@@ -9,7 +10,7 @@ export class BlockContext implements BlockContextBase {
   paddingVertical: number
   x?: number
   y?: number
-  pageContext?: PageContext
+  pageContext?: PageContextBase
 
   constructor({
     id = '',
@@ -20,7 +21,7 @@ export class BlockContext implements BlockContextBase {
     paddingVertical = 0,
     x = 0,
     y = 0,
-    pageContext
+    pageContext = new PageContext()
   }: Partial<BlockContextBase> = {}) {
     this.id = id
     this.numberOfElements = numberOfElements
@@ -32,7 +33,7 @@ export class BlockContext implements BlockContextBase {
     this.y = y
     this.pageContext = pageContext
 
-    if (this.pageContext) {
+    if (this.pageContext && this.cursorYPosition === 0) {
       this.cursorYPosition += this.pageContext.paddingVertical || this.pageContext.padding || 0
     }
   }
@@ -49,3 +50,5 @@ export class BlockContext implements BlockContextBase {
     this.numberOfElements++
   }
 }
+
+export default BlockContext

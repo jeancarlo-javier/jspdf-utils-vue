@@ -8,7 +8,8 @@ import {
   calculateLineYPosition
 } from '../src/utils/elementUtils'
 import { calcXPosition, calcYPosition } from '../src/utils/pdfUtils'
-import { BaseTextOptions, BlockContext } from '../src/types/pdfUtils.types'
+import { BaseTextOptions } from '../src/types/pdfUtils.types'
+import BlockContext from '../src/types/blockContext'
 
 describe('elementUtils', () => {
   describe('Global Utilities', () => {
