@@ -1,6 +1,7 @@
 import type { jsPDF } from 'jspdf'
 import { addText, addLine } from '../utils/pdfElements'
-import { BlockContext, PageContext } from '../types/pdfUtils.types'
+import { PageContext } from '../types/pdfUtils.types'
+import { BlockContext } from '../types/blockContext'
 import { getDocWidth } from '../utils/pdfUtils'
 
 const generateTemplate = (doc: jsPDF) => {
