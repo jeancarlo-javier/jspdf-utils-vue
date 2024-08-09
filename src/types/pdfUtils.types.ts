@@ -1,3 +1,5 @@
+import type { jsPDF } from 'jspdf'
+
 export interface BlockContextBase {
   id: string
   x?: number
@@ -63,4 +65,5 @@ export interface PageContextBase {
   padding?: number
   paddingVertical?: number
   paddingHorizontal?: number
+  addPage(doc: jsPDF): void
 }

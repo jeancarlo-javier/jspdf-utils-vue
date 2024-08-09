@@ -17,29 +17,18 @@ export function resetDocConfig(doc: jsPDF): void {
   doc.setFont('Helvetica')
 }
 
-export function checkIfElementFitsPage(
-  doc: jsPDF,
-  blockContext: BlockContext,
-  elementHeight: number
-): boolean {
-  const { pageContext } = blockContext
-  const paddingBottom = pageContext.paddingVertical || pageContext.padding || 0
-
-  return blockContext.cursorYPosition + elementHeight > getDocHeight(doc) - paddingBottom
-}
-
-export function breakPage(doc: jsPDF, blockContext: BlockContext): void {
-  doc.addPage()
+export function addPage(doc: jsPDF, blockContext: BlockContext): void {
+  blockContext.pageContext.addPage(doc)
   blockContext.resetCursorYPosition()
 }
 
-export function breakPageIfNeeded(
+export function addNewPageIfNeeded(
   doc: jsPDF,
   blockContext: BlockContext,
   elementHeight: number
 ): void {
   if (checkIfElementFitsPage(doc, blockContext, elementHeight)) {
-    breakPage(doc, blockContext)
+    addPage(doc, blockContext)
   }
 }
 
@@ -81,69 +70,6 @@ export function calcCursorYPositionText(
 }
 
 // Element Utilities
-// export function checkIfElementFitsPage(
-//   doc: jsPDF,
-//   blockContext: BlockContext,
-//   elementHeight: number
-// ): boolean {
-//   const { pageContext } = blockContext
-//   const paddingBottom = pageContext.paddingVertical || pageContext.padding || 0
-
-//   return blockContext.cursorYPosition + elementHeight <= getDocHeight(doc) - paddingBottom
-// }
-
-// Text Utilities
-export function getTextWidth(doc: jsPDF, text: string, options: BaseTextOptions): number {
-  const maxWidth = options.maxWidth
-  const fontSize = options.fontSize || 16
-  const textWidth = (doc.getStringUnitWidth(text) * fontSize) / doc.internal.scaleFactor
-
-  return maxWidth && textWidth > maxWidth ? maxWidth : textWidth
-}
-
-export function getTextHeight(
-  doc: jsPDF,
-  text: string,
-  maxWidth: number,
-  options: BaseTextOptions
-): number {
-  const fontSize = options.fontSize || 16
-  const lineHeight =
-    ((options.lineHeight || doc.getLineHeightFactor()) * fontSize) / doc.internal.scaleFactor
-
-  const lines = doc.splitTextToSize(text, maxWidth)
-
-  return lines.length * lineHeight
-}
-
-export function centerTextHorizontal(
-  doc: jsPDF,
-  text: string,
-  options: BaseTextOptions
-): number {
-  const docWidth = getDocWidth(doc)
-  const textWidth = getTextWidth(doc, text, options)
-  return (docWidth - textWidth) / 2
-}
-
-export function getMaxTextWidth(
-  textMaxWidth: number,
-  docMaxWidth: number,
-  blockContext: BlockContext
-): number {
-  let maxWidth = textMaxWidth || blockContext.maxWidth || docMaxWidth
-  if (blockContext.paddingHorizontal) {
-    maxWidth -= blockContext.paddingHorizontal * 2
-  }
-  return maxWidth
-}
-
-// Element Utilities
-// export function centerLineHorizontal(doc: jsPDF, blockContext: BlockContext): number {
-//   const docWidth = getDocWidth(doc)
-// }
-
-// Position Calculation Utilities
 export function calcXPosition(
   doc: jsPDF,
   blockContext: BlockContext,
@@ -200,4 +126,61 @@ export function calcYPosition(
   }
 
   return y
+}
+
+export function checkIfElementFitsPage(
+  doc: jsPDF,
+  blockContext: BlockContext,
+  elementHeight: number
+): boolean {
+  const { pageContext } = blockContext
+  const paddingBottom = pageContext.paddingVertical || pageContext.padding || 0
+
+  return blockContext.cursorYPosition + elementHeight > getDocHeight(doc) - paddingBottom
+}
+
+// Text Utilities
+export function getTextWidth(doc: jsPDF, text: string, options: BaseTextOptions): number {
+  const maxWidth = options.maxWidth
+  const fontSize = options.fontSize || 16
+  const textWidth = (doc.getStringUnitWidth(text) * fontSize) / doc.internal.scaleFactor
+
+  return maxWidth && textWidth > maxWidth ? maxWidth : textWidth
+}
+
+export function getTextHeight(
+  doc: jsPDF,
+  text: string,
+  maxWidth: number,
+  options: BaseTextOptions
+): number {
+  const fontSize = options.fontSize || 16
+  const lineHeight =
+    ((options.lineHeight || doc.getLineHeightFactor()) * fontSize) / doc.internal.scaleFactor
+
+  const lines = doc.splitTextToSize(text, maxWidth)
+
+  return lines.length * lineHeight
+}
+
+export function centerTextHorizontal(
+  doc: jsPDF,
+  text: string,
+  options: BaseTextOptions
+): number {
+  const docWidth = getDocWidth(doc)
+  const textWidth = getTextWidth(doc, text, options)
+  return (docWidth - textWidth) / 2
+}
+
+export function getMaxTextWidth(
+  textMaxWidth: number,
+  docMaxWidth: number,
+  blockContext: BlockContext
+): number {
+  let maxWidth = textMaxWidth || blockContext.maxWidth || docMaxWidth
+  if (blockContext.paddingHorizontal) {
+    maxWidth -= blockContext.paddingHorizontal * 2
+  }
+  return maxWidth
 }

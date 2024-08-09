@@ -7,7 +7,7 @@ import {
   centerTextHorizontal,
   calcXPosition,
   calcYPosition,
-  breakPageIfNeeded
+  addNewPageIfNeeded
 } from './pdfUtils'
 import {
   setDocumentFont,
@@ -56,7 +56,7 @@ export function addText(
   const textHeight = getTextHeight(doc, text, elementMaxWidth || 0, options)
 
   // Apply page break before adding text if needed
-  breakPageIfNeeded(doc, blockContext, textHeight)
+  addNewPageIfNeeded(doc, blockContext, textHeight)
 
   if (textCenter) initialX = centerTextHorizontal(doc, text, options)
 
@@ -111,7 +111,7 @@ export function addLine(
 
   adjustLineCursorPosition(blockContext, options)
 
-  breakPageIfNeeded(doc, blockContext, 1)
+  addNewPageIfNeeded(doc, blockContext, 1)
 
   blockContext.addElement()
 }
