@@ -10,7 +10,7 @@ class BlockContext implements BlockContextBase {
   paddingVertical: number
   x?: number
   y?: number
-  pageContext?: PageContextBase
+  pageContext: PageContextBase
 
   constructor({
     id = '',

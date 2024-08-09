@@ -8,7 +8,6 @@ import {
   calcXPosition,
   calcYPosition,
   breakPageIfNeeded
-  // centerLineHorizontal
 } from './pdfUtils'
 import {
   setDocumentFont,

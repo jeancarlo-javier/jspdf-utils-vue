@@ -10,7 +10,7 @@ describe('BlockContext', () => {
       expect(blockContext.cursorYPosition).toBe(0)
     })
 
-    test('adds paddingVertical to cursorYPosition', () => {
+    test('adds the paddingVertical to the cursorYPosition', () => {
       const blockContext = new BlockContext({
         pageContext: new PageContext({ paddingVertical: 10 })
       })

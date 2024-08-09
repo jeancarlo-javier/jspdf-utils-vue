@@ -10,6 +10,8 @@ import {
 import { calcXPosition, calcYPosition } from '../src/utils/pdfUtils'
 import { BaseTextOptions } from '../src/types/pdfUtils.types'
 import BlockContext from '../src/types/blockContext'
+import { getDocHeight } from '@/utils/pdfUtils'
+import PageContext from '@/types/pageContext'
 
 describe('elementUtils', () => {
   describe('Global Utilities', () => {
@@ -24,6 +26,14 @@ describe('elementUtils', () => {
       expect(doc.setFont).toHaveBeenCalledWith('Helvetica', 'normal', 400)
       expect(doc.setFontSize).toHaveBeenCalledWith(16)
     })
+
+    // it('add the element to the next page if its height exceeds the page padding.', () => {
+    //   const pageContext = new PageContext({ paddingVertical: 10 })
+    //   const blockContext = new BlockContext({
+    //     pageContext,
+    //     cursorYPosition: getDocHeight(doc) - 10
+    //   })
+    // })
   })
 
   describe('Text Utilities', () => {

@@ -17,12 +17,20 @@ export function resetDocConfig(doc: jsPDF): void {
   doc.setFont('Helvetica')
 }
 
-export function detectPageBreak(
+export function checkIfElementFitsPage(
   doc: jsPDF,
   blockContext: BlockContext,
   elementHeight: number
 ): boolean {
-  return blockContext.cursorYPosition + elementHeight > getDocHeight(doc)
+  const { pageContext } = blockContext
+  const paddingBottom = pageContext.paddingVertical || pageContext.padding || 0
+
+  return blockContext.cursorYPosition + elementHeight > getDocHeight(doc) - paddingBottom
+}
+
+export function breakPage(doc: jsPDF, blockContext: BlockContext): void {
+  doc.addPage()
+  blockContext.resetCursorYPosition()
 }
 
 export function breakPageIfNeeded(
@@ -30,9 +38,8 @@ export function breakPageIfNeeded(
   blockContext: BlockContext,
   elementHeight: number
 ): void {
-  if (detectPageBreak(doc, blockContext, elementHeight)) {
-    doc.addPage()
-    blockContext.resetCursorYPosition()
+  if (checkIfElementFitsPage(doc, blockContext, elementHeight)) {
+    breakPage(doc, blockContext)
   }
 }
 
@@ -72,6 +79,18 @@ export function calcCursorYPositionText(
     getTextHeight(doc, text, maxWidth, options)
   )
 }
+
+// Element Utilities
+// export function checkIfElementFitsPage(
+//   doc: jsPDF,
+//   blockContext: BlockContext,
+//   elementHeight: number
+// ): boolean {
+//   const { pageContext } = blockContext
+//   const paddingBottom = pageContext.paddingVertical || pageContext.padding || 0
+
+//   return blockContext.cursorYPosition + elementHeight <= getDocHeight(doc) - paddingBottom
+// }
 
 // Text Utilities
 export function getTextWidth(doc: jsPDF, text: string, options: BaseTextOptions): number {

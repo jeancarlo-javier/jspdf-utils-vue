@@ -113,14 +113,14 @@ describe('Position Calculations', () => {
 
     describe('pageContext', () => {
       it('calculates x & y position with page padding', () => {
-        const pageContext: PageContextBase = { padding: 10 }
+        const pageContext = new PageContext({ padding: 10 })
         const blockContext = new BlockContext({ pageContext })
         const y = calcYPosition(0, blockContext, {})
         expect(y).toBe(10)
       })
 
       it('calculates x position with page vertical padding', () => {
-        const pageContext: PageContextBase = { paddingVertical: 10 }
+        const pageContext = new PageContext({ paddingVertical: 10 })
         const blockContext = new BlockContext({ pageContext })
         const y = calcYPosition(0, blockContext, {})
         expect(y).toBe(10)
