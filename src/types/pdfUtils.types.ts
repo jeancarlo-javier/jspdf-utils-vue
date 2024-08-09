@@ -10,6 +10,7 @@ export interface BlockContextBase {
   paddingHorizontal: number
   paddingVertical: number
   pageContext?: PageContextBase
+  resetCursorYPosition(): void
 }
 
 // Offsets

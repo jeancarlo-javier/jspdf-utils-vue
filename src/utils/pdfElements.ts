@@ -7,7 +7,8 @@ import {
   centerTextHorizontal,
   calcXPosition,
   calcYPosition,
-  addNewPageIfNeeded
+  addNewPageIfNeeded,
+  getMaxElementWidth
 } from './pdfUtils'
 import {
   setDocumentFont,
@@ -51,7 +52,10 @@ export function addText(
     adjustTextCursorPosition(blockContext)
   }
 
-  const elementMaxWidth = getMaxTextWidth(maxWidth || 0, getDocWidth(doc), blockContext)
+  const elementMaxWidth = getMaxElementWidth(doc, blockContext, maxWidth || 0)
+  console.log('🚀 ~ elementMaxWidth:', elementMaxWidth)
+  const _elementMaxWidth = getMaxTextWidth(maxWidth || 0, getDocWidth(doc), blockContext)
+  console.log('🚀 ~ _elementMaxWidth:', _elementMaxWidth)
 
   const textHeight = getTextHeight(doc, text, elementMaxWidth || 0, options)
 
@@ -105,7 +109,7 @@ export function addLine(
     marginBottom
   })
 
-  const x2 = x + (maxWidth || getDocWidth(doc))
+  const x2 = x + getMaxElementWidth(doc, blockContext, maxWidth)
 
   doc.line(x, y, x2, y)
 

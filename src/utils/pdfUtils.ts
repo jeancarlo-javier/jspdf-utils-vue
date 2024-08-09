@@ -17,8 +17,13 @@ export function resetDocConfig(doc: jsPDF): void {
   doc.setFont('Helvetica')
 }
 
+export function getPageTopPadding(blockContext: BlockContext): number {
+  return blockContext.pageContext.paddingVertical || blockContext.pageContext.padding || 0
+}
+
 export function addPage(doc: jsPDF, blockContext: BlockContext): void {
   blockContext.pageContext.addPage(doc)
+
   blockContext.resetCursorYPosition()
 }
 
@@ -84,6 +89,11 @@ export function calcXPosition(
     textAlign = options.textAlign || 'left'
   }
 
+  // Page Spacing
+  if (blockContext.pageContext.paddingHorizontal) {
+    x += blockContext.pageContext.paddingHorizontal
+  }
+
   if (blockContext.x) x += blockContext.x
   if (blockContext.paddingHorizontal) x += blockContext.paddingHorizontal
   if (leftOffset) x += leftOffset
@@ -112,9 +122,11 @@ export function calcYPosition(
   if (blockContext.paddingVertical && blockContext.numberOfElements === 0) {
     y += blockContext.paddingVertical
   }
+
   if (topOffset) y += topOffset
   if (bottomOffset) y -= bottomOffset
   if (marginTop) y += marginTop
+
   y += blockContext.cursorYPosition || 0
 
   if ('lineHeight' in options) {
@@ -137,6 +149,26 @@ export function checkIfElementFitsPage(
   const paddingBottom = pageContext.paddingVertical || pageContext.padding || 0
 
   return blockContext.cursorYPosition + elementHeight > getDocHeight(doc) - paddingBottom
+}
+
+export function getMaxElementWidth(
+  doc: jsPDF,
+  blockContext: BlockContext,
+  maxWidth?: number
+): number {
+  const docMaxWidth = getDocWidth(doc)
+
+  let elementMaxWidth = maxWidth || blockContext.maxWidth || docMaxWidth
+
+  if (blockContext.paddingHorizontal) {
+    elementMaxWidth -= blockContext.paddingHorizontal * 2
+  }
+
+  if (blockContext.pageContext.paddingHorizontal) {
+    elementMaxWidth -= blockContext.pageContext.paddingHorizontal * 2
+  }
+
+  return elementMaxWidth
 }
 
 // Text Utilities
@@ -182,5 +214,10 @@ export function getMaxTextWidth(
   if (blockContext.paddingHorizontal) {
     maxWidth -= blockContext.paddingHorizontal * 2
   }
+
+  if (blockContext.pageContext.paddingHorizontal) {
+    maxWidth -= blockContext.pageContext.paddingHorizontal * 2
+  }
+
   return maxWidth
 }

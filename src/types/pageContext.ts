@@ -8,7 +8,7 @@ class PageContext implements PageContextBase {
   paddingHorizontal?: number | undefined
 
   constructor({
-    numberOfPages = 0,
+    numberOfPages = 1,
     padding = 0,
     paddingVertical = 0,
     paddingHorizontal = 0

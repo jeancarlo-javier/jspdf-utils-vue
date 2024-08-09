@@ -1,5 +1,6 @@
 import type { PageContextBase, BlockContextBase } from '../types/pdfUtils.types'
 import PageContext from './pageContext'
+import { getPageTopPadding } from '../utils/pdfUtils'
 
 class BlockContext implements BlockContextBase {
   id: string
@@ -33,8 +34,8 @@ class BlockContext implements BlockContextBase {
     this.y = y
     this.pageContext = pageContext
 
-    if (this.pageContext && this.cursorYPosition === 0) {
-      this.cursorYPosition += this.pageContext.paddingVertical || this.pageContext.padding || 0
+    if (this.cursorYPosition === 0) {
+      this.cursorYPosition += getPageTopPadding(this)
     }
   }
 
@@ -43,7 +44,8 @@ class BlockContext implements BlockContextBase {
   }
 
   resetCursorYPosition(): void {
-    this.cursorYPosition = 0
+    const initialTopPadding = getPageTopPadding(this)
+    this.cursorYPosition = initialTopPadding
   }
 
   addElement(): void {

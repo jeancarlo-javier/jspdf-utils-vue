@@ -7,7 +7,8 @@ import { getDocWidth } from '../utils/pdfUtils'
 const generateTemplate = (doc: jsPDF) => {
   const pageContext = new PageContext({
     padding: 0,
-    paddingVertical: 25
+    paddingVertical: 25,
+    paddingHorizontal: 20
   })
 
   const blockContext1 = new BlockContext({

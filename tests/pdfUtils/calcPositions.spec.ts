@@ -112,18 +112,12 @@ describe('Position Calculations', () => {
     })
 
     describe('pageContext', () => {
-      it('calculates x & y position with page padding', () => {
-        const pageContext = new PageContext({ padding: 10 })
+      it('calculates x position with page horizontal padding', () => {
+        const pageContext = new PageContext({ paddingHorizontal: 10 })
         const blockContext = new BlockContext({ pageContext })
-        const y = calcYPosition(0, blockContext, {})
-        expect(y).toBe(10)
-      })
 
-      it('calculates x position with page vertical padding', () => {
-        const pageContext = new PageContext({ paddingVertical: 10 })
-        const blockContext = new BlockContext({ pageContext })
-        const y = calcYPosition(0, blockContext, {})
-        expect(y).toBe(10)
+        const x = calcXPosition(doc, blockContext, 0, {}, testText)
+        expect(x).toBe(10)
       })
     })
   })
@@ -184,6 +178,23 @@ describe('Position Calculations', () => {
       }
       const y = calcYPosition(0, blockContext, options)
       expect(y).toBe(30)
+    })
+
+    describe('pageContext', () => {
+      it('calculates y position with page padding', () => {
+        const pageContext = new PageContext({ padding: 10 })
+        const blockContext = new BlockContext({ pageContext })
+
+        const y = calcYPosition(0, blockContext, {})
+        expect(y).toBe(10)
+      })
+
+      it('calculates x position with page vertical padding', () => {
+        const pageContext = new PageContext({ paddingVertical: 10 })
+        const blockContext = new BlockContext({ pageContext })
+        const y = calcYPosition(0, blockContext, {})
+        expect(y).toBe(10)
+      })
     })
   })
 })

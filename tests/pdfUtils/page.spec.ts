@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { getDocHeight, checkIfElementFitsPage, addPage } from '@/utils/pdfUtils'
+import {
+  getDocHeight,
+  checkIfElementFitsPage,
+  addPage,
+  getPageTopPadding
+} from '@/utils/pdfUtils'
 import PageContext from '@/types/pageContext'
 import BlockContext from '@/types/blockContext'
 import type { PageContextBase } from '@/types/pdfUtils.types'
@@ -64,6 +69,36 @@ describe('Page Break Detection', () => {
       const blockContext = new BlockContext({ cursorYPosition: 100, pageContext })
       addPage(doc, blockContext)
       expect(blockContext.cursorYPosition).toBe(0)
+    })
+  })
+
+  describe('getPageTopPadding', () => {
+    it('returns the page padding vertical value', () => {
+      const pageContext = new PageContext({ paddingVertical: 10 })
+      const blockContext = new BlockContext({ pageContext })
+      const padding = getPageTopPadding(blockContext)
+      expect(padding).toBe(10)
+    })
+
+    it('returns the page padding value', () => {
+      const pageContext = new PageContext({ padding: 10 })
+      const blockContext = new BlockContext({ pageContext })
+      const padding = getPageTopPadding(blockContext)
+      expect(padding).toBe(10)
+    })
+
+    it('Returns paddingVertical when both padding and paddingVertical are defined.', () => {
+      const pageContext = new PageContext({ padding: 10, paddingVertical: 20 })
+      const blockContext = new BlockContext({ pageContext })
+      const padding = getPageTopPadding(blockContext)
+      expect(padding).toBe(20)
+    })
+
+    it('returns 0 if no page padding is defined', () => {
+      const pageContext = new PageContext()
+      const blockContext = new BlockContext({ pageContext })
+      const padding = getPageTopPadding(blockContext)
+      expect(padding).toBe(0)
     })
   })
 })
