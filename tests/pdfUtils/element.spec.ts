@@ -1,10 +1,10 @@
 import { describe, it, beforeEach, expect } from 'vitest'
-import { getMaxTextWidth } from '@/utils/pdfUtils'
+import { getMaxElementWidth } from '@/utils/pdfUtils'
 import BlockContext from '@/types/blockContext'
 import PageContext from '@/types/pageContext'
 import jsPDF from 'jspdf'
 
-describe('Global Utilities', () => {
+describe('getMaxElementWidth', () => {
   let doc: jsPDF
 
   beforeEach(() => {
@@ -16,33 +16,34 @@ describe('Global Utilities', () => {
     })
   })
 
-  // TODO: Replace getMaxTextWidth with getMaxElementWidth
-  describe('getMaxTextWidth', () => {
-    it('calculates max text width with default options', () => {
-      const blockContext = new BlockContext()
-      const maxWidth = getMaxTextWidth(0, doc.internal.pageSize.getWidth(), blockContext)
-      expect(maxWidth).toBe(doc.internal.pageSize.getWidth())
-    })
+  it('returns maxWidth when provided', () => {
+    const blockContext = new BlockContext({ maxWidth: 200 })
+    const maxWidth = getMaxElementWidth(doc, blockContext, 100)
+    expect(maxWidth).toBe(100)
+  })
 
-    it('calculates max text width with specified maxWidth', () => {
-      const blockContext = new BlockContext()
-      const maxWidth = getMaxTextWidth(100, doc.internal.pageSize.getWidth(), blockContext)
-      expect(maxWidth).toBe(100)
-    })
+  it('returns blockContext maxWidth when maxWidth is not provided', () => {
+    const blockContext = new BlockContext({ maxWidth: 200 })
+    const maxWidth = getMaxElementWidth(doc, blockContext)
+    expect(maxWidth).toBe(200)
+  })
 
-    it('calculates max text width with blockContext horizontal padding', () => {
-      const blockContext = new BlockContext({ paddingHorizontal: 10 })
-      const maxWidth = getMaxTextWidth(0, doc.internal.pageSize.getWidth(), blockContext)
-      expect(maxWidth).toBe(
-        doc.internal.pageSize.getWidth() - blockContext.paddingHorizontal * 2
-      )
-    })
+  it('returns docMaxWidth when neither maxWidth nor blockContext maxWidth are provided', () => {
+    const blockContext = new BlockContext()
+    const maxWidth = getMaxElementWidth(doc, blockContext)
+    expect(maxWidth).toBe(doc.internal.pageSize.getWidth())
+  })
 
-    it('calculates max text width with pageContext horizontal padding', () => {
-      const pageContext = new PageContext({ paddingHorizontal: 10 })
-      const blockContext = new BlockContext({ pageContext })
-      const maxWidth = getMaxTextWidth(0, doc.internal.pageSize.getWidth(), blockContext)
-      expect(maxWidth).toBe(doc.internal.pageSize.getWidth() - 10 * 2)
-    })
+  it('subtracts blockContext horizontal padding from maxWidth', () => {
+    const blockContext = new BlockContext({ paddingHorizontal: 10, maxWidth: 200 })
+    const maxWidth = getMaxElementWidth(doc, blockContext)
+    expect(maxWidth).toBe(180)
+  })
+
+  it('subtracts pageContext horizontal padding from maxWidth', () => {
+    const pageContext = new PageContext({ paddingHorizontal: 10 })
+    const blockContext = new BlockContext({ pageContext })
+    const maxWidth = getMaxElementWidth(doc, blockContext)
+    expect(maxWidth).toBe(doc.internal.pageSize.getWidth() - 20)
   })
 })

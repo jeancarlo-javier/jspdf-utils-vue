@@ -13,6 +13,7 @@ const generateTemplate = (doc: jsPDF) => {
   const h2FontSize = 12
   const h3FontSize = 10
   const fontFamily = 'Montserrat'
+  const paddingHorizontal = 30
 
   const defaultTextOptions = {
     fontSize: defaultFontSize,
@@ -36,17 +37,12 @@ const generateTemplate = (doc: jsPDF) => {
     marginBottom: 10
   })
 
-  addText(
-    doc,
-    blockContext1,
-    '1234 Ipsum St., Dolor City | +12 34567890 | loremipsum@example.com',
-    {
-      ...defaultTextOptions,
-      textCenter: true,
-      fontSize: defaultFontSize,
-      marginBottom: 2
-    }
-  )
+  addText(doc, blockContext1, '1234 Ipsum St., Dolor City | +12 34567890 | loremipsum@example.com', {
+    ...defaultTextOptions,
+    textCenter: true,
+    fontSize: defaultFontSize,
+    marginBottom: 2
+  })
 
   addLine(doc, blockContext1, {
     marginTop: 10,
@@ -55,7 +51,7 @@ const generateTemplate = (doc: jsPDF) => {
 
   const blockContext2 = new BlockContext({
     cursorYPosition: blockContext1.cursorYPosition,
-    paddingHorizontal: 30
+    paddingHorizontal
   })
 
   addText(doc, blockContext2, 'Summary', {
@@ -178,7 +174,7 @@ const generateTemplate = (doc: jsPDF) => {
 
   const skillsColumn1 = new BlockContext({
     cursorYPosition: blockContext2.cursorYPosition,
-    paddingHorizontal: 30
+    paddingHorizontal
   })
 
   addText(doc, skillsColumn1, 'Effective Communication', {
@@ -226,7 +222,7 @@ const generateTemplate = (doc: jsPDF) => {
 
   const blockContext3 = new BlockContext({
     cursorYPosition: skillsColumn1.cursorYPosition,
-    paddingHorizontal: 30
+    paddingHorizontal
   })
 
   addLine(doc, blockContext3, {

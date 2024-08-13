@@ -15,7 +15,7 @@
 import { jsPDF } from 'jspdf'
 import { ref, onMounted, watch } from 'vue'
 import VuePdfEmbed from 'vue-pdf-embed'
-import generateTemplate from '../templates/test-template'
+import generateTemplate from '../templates/oxford-template'
 
 const pdfViewer = ref<HTMLDivElement>()
 const pdfBase64 = ref<string>()
@@ -42,9 +42,7 @@ onMounted(async () => {
   })
 
   try {
-    const { MontserratRegular, MontserratBold, MontserratSemibold } = await import(
-      '../../fonts/montserrat-fonts'
-    )
+    const { MontserratRegular, MontserratBold, MontserratSemibold } = await import('../../fonts/montserrat-fonts')
 
     doc.addFileToVFS('Montserrat-Regular.ttf', MontserratRegular)
     doc.addFont('Montserrat-Regular.ttf', 'Montserrat', 'normal', 400)

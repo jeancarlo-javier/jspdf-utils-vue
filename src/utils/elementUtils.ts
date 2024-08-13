@@ -32,9 +32,7 @@ export function getTextSettings(
 }
 
 export function adjustTextCursorPosition(blockContext: BlockContext): void {
-  blockContext.updateCursorYPosition(
-    blockContext.cursorYPosition - blockContext.paddingVertical
-  )
+  blockContext.updateCursorYPosition(blockContext.cursorYPosition - blockContext.paddingVertical)
 }
 
 // Line Utilities
@@ -60,9 +58,6 @@ export function calculateLineYPosition(
   return calcYPosition(initialY, blockContext, offsets)
 }
 
-export function adjustLineCursorPosition(
-  blockContext: BlockContext,
-  options: BaseLineOptions
-): void {
-  blockContext.updateCursorYPosition(calcCursorYPosition(blockContext, options, options.y))
+export function adjustLineCursorPosition(blockContext: BlockContext, options: BaseLineOptions): void {
+  blockContext.updateCursorYPosition(calcCursorYPosition(blockContext, options, options.y) + 1)
 }

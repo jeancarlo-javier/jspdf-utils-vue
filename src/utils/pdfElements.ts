@@ -1,9 +1,7 @@
 import {
   resetDocConfig,
-  getMaxTextWidth,
   calcCursorYPosition,
   getTextHeight,
-  getDocWidth,
   centerTextHorizontal,
   calcXPosition,
   calcYPosition,
@@ -27,12 +25,7 @@ import type {
 import BlockContext from '../types/blockContext'
 import type { jsPDF } from 'jspdf'
 
-export function addText(
-  doc: jsPDF,
-  blockContext: BlockContext,
-  text: string,
-  options: BaseTextOptions = {}
-): void {
+export function addText(doc: jsPDF, blockContext: BlockContext, text: string, options: BaseTextOptions = {}): void {
   const {
     fontSize = 16,
     fontFamily = 'Helvetica',
@@ -53,9 +46,6 @@ export function addText(
   }
 
   const elementMaxWidth = getMaxElementWidth(doc, blockContext, maxWidth || 0)
-  console.log('🚀 ~ elementMaxWidth:', elementMaxWidth)
-  const _elementMaxWidth = getMaxTextWidth(maxWidth || 0, getDocWidth(doc), blockContext)
-  console.log('🚀 ~ _elementMaxWidth:', _elementMaxWidth)
 
   const textHeight = getTextHeight(doc, text, elementMaxWidth || 0, options)
 
@@ -80,36 +70,21 @@ export function addText(
   resetDocConfig(doc)
 }
 
-export function addLine(
-  doc: jsPDF,
-  blockContext: BlockContext,
-  options: BaseLineOptions = {}
-): void {
-  const {
-    x: initialX = 0,
-    y: initialY = 0,
-    maxWidth,
-    topOffset,
-    bottomOffset,
-    marginTop,
-    marginBottom
-  } = options
+export function addLine(doc: jsPDF, blockContext: BlockContext, options: BaseLineOptions = {}): void {
+  const { x: initialX = 0, y: initialY = 0, maxWidth, topOffset, bottomOffset, marginTop } = options
 
   if (blockContext.numberOfElements > 0) {
-    blockContext.updateCursorYPosition(
-      blockContext.cursorYPosition - blockContext.paddingVertical
-    )
+    blockContext.updateCursorYPosition(blockContext.cursorYPosition - blockContext.paddingVertical)
   }
 
   const x = calculateLineXPosition(doc, blockContext, initialX, options)
   const y = calculateLineYPosition(initialY, blockContext, {
     topOffset,
     bottomOffset,
-    marginTop,
-    marginBottom
+    marginTop
   })
-
-  const x2 = x + getMaxElementWidth(doc, blockContext, maxWidth)
+  // Calculate the x-coordinate for the line element, adding back the horizontal padding to match the text width.
+  const x2 = x + getMaxElementWidth(doc, blockContext, maxWidth) + blockContext.paddingHorizontal * 2
 
   doc.line(x, y, x2, y)
 
