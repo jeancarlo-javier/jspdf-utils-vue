@@ -57,8 +57,11 @@ export interface BaseLineOptions extends BaseElementOptions {
   center?: boolean
 }
 
-export interface BaseListOptions extends BaseElementOptions {
-  // bullet?: string
+export interface BaseListOptions extends BaseTextOptions {
+  ordered?: boolean
+  bulletType?: string
+  numberStyle?: 'decimal' | 'roman' | 'alpha'
+  itemIndent?: number
 }
 
 export interface PageContextBase {

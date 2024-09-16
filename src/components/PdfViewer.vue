@@ -15,7 +15,7 @@
 import { jsPDF } from 'jspdf'
 import { ref, onMounted, watch } from 'vue'
 import VuePdfEmbed from 'vue-pdf-embed'
-import generateTemplate from '../templates/oxford-template'
+import generateTemplate from '../templates/test-template'
 
 const pdfViewer = ref<HTMLDivElement>()
 const pdfBase64 = ref<string>()

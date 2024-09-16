@@ -13,8 +13,8 @@ export function getDocHeight(doc: jsPDF): number {
 }
 
 export function resetDocConfig(doc: jsPDF): void {
-  doc.setFontSize(16)
-  doc.setFont('Helvetica')
+  // doc.setFontSize(16)
+  // doc.setFont('Helvetica')
 }
 
 export function getPageTopPadding(blockContext: BlockContext): number {
@@ -74,7 +74,7 @@ export function calcXPosition(
   options: BaseElementOptions | BaseTextOptions,
   text?: string
 ): number {
-  const { leftOffset, rightOffset } = options
+  const { leftOffset, rightOffset, marginLeft } = options
 
   let textAlign: TextOptionsLight['align'] = 'left'
   if ('textAlign' in options) {
@@ -90,6 +90,7 @@ export function calcXPosition(
   if (blockContext.paddingHorizontal) x += blockContext.paddingHorizontal
   if (leftOffset) x += leftOffset
   if (rightOffset) x -= rightOffset
+  if (marginLeft) x += marginLeft
 
   if (text) {
     const textWidth = getTextWidth(doc, text, options)

@@ -1,5 +1,5 @@
 import type { jsPDF } from 'jspdf'
-import { addText, addLine } from '../utils/pdfElements'
+import { addText, addLine, addList } from '../utils/pdfElements'
 import PageContext from '../types/pageContext'
 import BlockContext from '../types/blockContext'
 import { getDocWidth } from '../utils/pdfUtils'
@@ -43,17 +43,12 @@ const generateTemplate = (doc: jsPDF) => {
     marginBottom: 10
   })
 
-  addText(
-    doc,
-    blockContext1,
-    '1234 Ipsum St., Dolor City | +12 34567890 | loremipsum@example.com',
-    {
-      ...defaultTextOptions,
-      textCenter: true,
-      fontSize: defaultFontSize,
-      marginBottom: 2
-    }
-  )
+  addText(doc, blockContext1, '1234 Ipsum St., Dolor City | +12 34567890 | loremipsum@example.com', {
+    ...defaultTextOptions,
+    textCenter: true,
+    fontSize: defaultFontSize,
+    marginBottom: 2
+  })
 
   addLine(doc, blockContext1, {
     marginTop: 10,
@@ -295,6 +290,15 @@ const generateTemplate = (doc: jsPDF) => {
   addText(doc, blockContext3, 'Spanish', {
     ...defaultTextOptions,
     marginBottom: 4
+  })
+
+  addList(doc, blockContext3, ['Lorem Ipsum', 'Dolor Sit Amet', 'Consectetur Adipiscing Elit'], {
+    fontSize: 12
+  })
+
+  addList(doc, blockContext3, ['Lorem Ipsum', 'Dolor Sit Amet', 'Consectetur Adipiscing Elit'], {
+    fontSize: 14,
+    fontWeight: 'bold'
   })
 }
 
